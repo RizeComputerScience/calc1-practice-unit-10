@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 10 Practice: Optimization</title>
+<title>Unit 10 Practice</title>
 <meta name="description" content="Practice setting up and solving optimization problems with feedback on each line of your work.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2802,7 +2802,7 @@ var selfcheck = (function () {
    ==================================================================================== */
 
 /* ---------------- links ---------------- */
-var PAUL_C = 'https://tutorial.math.lamar.edu/Classes/CalcI/', PAUL_P = 'https://tutorial.math.lamar.edu/Problems/CalcI/';
+var PAUL_C = 'https://tutorial.math.lamar.edu/Classes/CalcI/';
 function paulEx(page, title, ex) { return [PAUL_C + page + '.aspx', 'Paul’s Online Math Notes: ' + title + (ex ? ', ' + ex : '')]; }
 var T_OPT1 = paulEx('Optimization', 'Optimization', 'Example 1');
 var T_OPT2 = paulEx('Optimization', 'Optimization', 'Example 2');
@@ -2811,7 +2811,7 @@ var T_METH = paulEx('Optimization', 'Optimization', 'Methods 1 to 3, after Examp
 var T_MORE2 = paulEx('MoreOptimization', 'More Optimization Problems', 'Example 2');
 var T_MORE3 = paulEx('MoreOptimization', 'More Optimization Problems', 'Example 3');
 var T_MORE4 = paulEx('MoreOptimization', 'More Optimization Problems', 'Example 4');
-var T_NUMS = [PAUL_P + 'Optimization.aspx', 'Paul’s Online Math Notes: Optimization, Practice Problems 1 to 3'];
+var T_NUMS = T_OPT1;
 
 /* ---------------- form guards (see the problem object above) ---------------- */
 var FORM = {
@@ -2831,7 +2831,7 @@ var FORM = {
 
 /* ---------------- the sections ---------------- */
 var SECTIONS_P = [
-  { id: 'sec-fence', nav: 'Numbers and Fences', title: 'Numbers and Fences', lede: 'These go with Paul’s [Optimization](' + T_OPT1[0] + '), Example 1, and its Practice Problems 1 to 3.' },
+  { id: 'sec-fence', nav: 'Numbers and Fences', title: 'Numbers and Fences', lede: 'These go with Paul’s [Optimization](' + T_OPT1[0] + '), Example 1.' },
   { id: 'sec-box', nav: 'Boxes', title: 'Boxes', lede: 'These go with Paul’s [Optimization](' + T_OPT2[0] + '), Examples 2 and 5.' },
   { id: 'sec-curve', nav: 'On a Curve', title: 'Shapes and Points on a Curve', lede: 'These go with Paul’s [More Optimization Problems](' + T_MORE2[0] + '), Examples 2 and 3.' },
   { id: 'sec-more', nav: 'Revenue and Wire', title: 'Revenue and a Cut Wire', lede: 'Problem 8 goes with Paul’s [More Optimization Problems](' + T_MORE4[0] + '), Example 4.' }
@@ -2857,9 +2857,9 @@ function cutSquares(s) {
 
 /* closing-figure functions */
 function prod1(y) { return (30 - y) * y * y; }
-function fence2(y) { return 800 / y + 2 * y; }
+function fence2(y) { return 450 / y + 2 * y; }
 function vol3(h) { return h * (16 - 2 * h) * (10 - 2 * h); }
-function cost4(w) { return 8 * w * w + 128 / w; }
+function cost4(w) { return 12 * w * w + 648 / w; }
 function area5(x) { return 2 * x * (12 - x * x); }
 function dist6(x) { return (x - 4) * (x - 4) + x; }
 function rev7(x) { return (20 + x) * (600 - 20 * x); }
@@ -2904,47 +2904,47 @@ var PROBLEMS = [
     after: '`P(y)` rises until `y = 20` and falls after it, so the peak at `(20, 4000)` is the absolute maximum.' },
 
   /* 2. a fence against a wall: the area is fixed, the fence length is minimized, Method 3 */
-  { id: 'p2', sec: 'sec-fence', v: 'y', task: 'A rectangular pen of area 800 square meters is built against a wall, so fence is needed on only three sides. Find the dimensions that use the least fence.', teach: T_OPT1,
+  { id: 'p2', sec: 'sec-fence', v: 'y', task: 'A rectangular pen of area 450 square meters is built against a wall, so fence is needed on only three sides. Find the dimensions that use the least fence.', teach: T_OPT1,
     fig: drawing({ x: [0, 10], y: [0.4, 6.6], segs: [{ from: [0.6, 5.3], to: [9.4, 5.3], role: 'muted', width: 7 }].concat(poly([[2, 5.3], [2, 1.5], [8, 1.5], [8, 5.3]], 'ink', false, 3)),
-      texts: [{ x: 5, y: 6, text: 'wall' }, { x: 5, y: 0.95, text: 'x' }, { x: 1.4, y: 3.4, text: 'y' }, { x: 8.6, y: 3.4, text: 'y' }, { x: 5, y: 3.4, text: 'area 800 m²' }],
-      aria: 'A rectangle against a wall along its top side. Fence runs down the two sides of length y and along the bottom side of length x. The area inside is 800 square meters.'}),
+      texts: [{ x: 5, y: 6, text: 'wall' }, { x: 5, y: 0.95, text: 'x' }, { x: 1.4, y: 3.4, text: 'y' }, { x: 8.6, y: 3.4, text: 'y' }, { x: 5, y: 3.4, text: 'area 450 m²' }],
+      aria: 'A rectangle against a wall along its top side. Fence runs down the two sides of length y and along the bottom side of length x. The area inside is 450 square meters.'}),
     steps: [
       { lead: 'What do you minimize, and what is the constraint?', ok: 0, pick: [
-        ['Minimize `L = x + 2y`; constraint `xy = 800`', 'The fence covers one side of length `x` and two of length `y`, and the area is fixed at 800.'],
-        ['Minimize `A = xy`; constraint `x + 2y = 800`', '800 is the area, which is fixed, so `xy = 800` is the constraint. The fence length is what changes, so that is what you minimize. Paul calls telling these apart the hard part.'],
-        ['Minimize `L = 2x + 2y`; constraint `xy = 800`', 'The wall forms one side of length `x`, so the fence covers `x` only once: `L = x + 2y`.']] },
-      { lead: 'Solve the constraint for `x`.', ask: 'x =', ans: '800/y',
-        wrongs: [['800y', 'Divide both sides of `xy = 800` by `y`.'], ['800 - y', '`xy = 800` is a product, not a sum. Divide both sides by `y`.']],
-        hints: ['Divide both sides of `xy = 800` by `y`.'] },
-      { lead: 'Substitute it into `L = x + 2y`.', ask: 'L(y) =', ans: '800/y + 2y',
-        wrongs: [['800/y + y', 'Two sides have length `y`, so the fence includes `2y`.']],
-        hints: ['Replace `x` in `x + 2y` with `F{800}{y}`.'] },
+        ['Minimize `L = x + 2y`; constraint `xy = 450`', 'The fence covers one side of length `x` and two of length `y`, and the area is fixed at 450.'],
+        ['Minimize `A = xy`; constraint `x + 2y = 450`', '450 is the area, which is fixed, so `xy = 450` is the constraint. The fence length is what changes, so that is what you minimize. Paul calls telling these apart the hard part.'],
+        ['Minimize `L = 2x + 2y`; constraint `xy = 450`', 'The wall forms one side of length `x`, so the fence covers `x` only once: `L = x + 2y`.']] },
+      { lead: 'Solve the constraint for `x`.', ask: 'x =', ans: '450/y',
+        wrongs: [['450y', 'Divide both sides of `xy = 450` by `y`.'], ['450 - y', '`xy = 450` is a product, not a sum. Divide both sides by `y`.']],
+        hints: ['Divide both sides of `xy = 450` by `y`.'] },
+      { lead: 'Substitute it into `L = x + 2y`.', ask: 'L(y) =', ans: '450/y + 2y',
+        wrongs: [['450/y + y', 'Two sides have length `y`, so the fence includes `2y`.']],
+        hints: ['Replace `x` in `x + 2y` with `F{450}{y}`.'] },
       { lead: 'What is the domain of `L(y)`?', ok: 0, pick: [
-        ['`y > 0`', 'Any positive depth gives a positive length `x = F{800}{y}`, and nothing in the problem caps `y`.'],
-        ['`0 ≤ y ≤ 800`', 'At `y = 0` there is no pen and `F{800}{y}` has no value. Nothing caps `y` at 800 either: a deep, narrow pen still has area 800.'],
-        ['`0 < y < 400`', 'Nothing caps `y`. For any positive `y`, the length `x = F{800}{y}` is positive and the area is 800.']] },
-      { ask: 'L′(y) =', ans: '2 - 800/y^2',
-        wrongs: [['2 + 800/y^2', 'Write `F{800}{y} = 800y^(−1)`. Its derivative is `−800y^(−2)`, which is negative.'],
-          ['2 - 800/y', 'Write `F{800}{y} = 800y^(−1)`. The power rule lowers the exponent to `−2`, so the derivative is `−F{800}{y^2}`.']],
-        hints: ['Write `F{800}{y}` as `800y^(−1)` and use the power rule.'] },
-      { lead: 'Solve `L′(y) = 0` in the domain.', ask: 'y =', num: true, ans: '20',
-        wrongs: [['400', '`F{800}{y^2} = 2` gives `y^2 = 400`. Take the square root.'], ['-20', '`−20` also solves `y^2 = 400`, but it is not in the domain `y > 0`.']],
-        hints: ['`2 = F{800}{y^2}` gives `y^2 = 400`.'] },
-      { lead: 'Which statement shows that `y = 20` gives the least fence?', ok: 0, pick: [
-        ['`L″(y) = F{1600}{y^3} > 0` for every `y > 0` (Method 3)', '`L` is concave up on its whole domain, so its one critical point gives the absolute minimum.'],
-        ['Compare `L` at the endpoints and at `y = 20` (Method 1)', 'The domain `y > 0` has no endpoints to compare: `L(y)` has no value at 0 and no right end. Method 1 needs a closed interval.', T_METH],
-        ['`L′(10) < 0`', 'One test point on one side is not enough. Method 2 needs the sign of `L′` on both sides of 20, and Method 3 needs the sign of `L″` on the whole domain.', T_METH]] },
-      { lead: 'Find the length along the wall.', ask: 'x =', num: true, ans: '40',
-        wrongs: [['20', '20 is the depth `y`. Use `x = F{800}{y}`.']],
-        hints: ['Use `x = F{800}{y}` with `y = 20`.'] },
+        ['`y > 0`', 'Any positive depth gives a positive length `x = F{450}{y}`, and nothing in the problem caps `y`.'],
+        ['`0 ≤ y ≤ 450`', 'At `y = 0` there is no pen and `F{450}{y}` has no value. Nothing caps `y` at 450 either: a deep, narrow pen still has area 450.'],
+        ['`0 < y < 225`', 'Nothing caps `y`. For any positive `y`, the length `x = F{450}{y}` is positive and the area is 450.']] },
+      { ask: 'L′(y) =', ans: '2 - 450/y^2',
+        wrongs: [['2 + 450/y^2', 'Write `F{450}{y} = 450y^(−1)`. Its derivative is `−450y^(−2)`, which is negative.'],
+          ['2 - 450/y', 'Write `F{450}{y} = 450y^(−1)`. The power rule lowers the exponent to `−2`, so the derivative is `−F{450}{y^2}`.']],
+        hints: ['Write `F{450}{y}` as `450y^(−1)` and use the power rule.'] },
+      { lead: 'Solve `L′(y) = 0` in the domain.', ask: 'y =', num: true, ans: '15',
+        wrongs: [['225', '`F{450}{y^2} = 2` gives `y^2 = 225`. Take the square root.'], ['-15', '`−15` also solves `y^2 = 225`, but it is not in the domain `y > 0`.']],
+        hints: ['`2 = F{450}{y^2}` gives `y^2 = 225`.'] },
+      { lead: 'Which statement shows that `y = 15` gives the least fence?', ok: 0, pick: [
+        ['`L″(y) = F{900}{y^3} > 0` for every `y > 0` (Method 3)', '`L` is concave up on its whole domain, so its one critical point gives the absolute minimum.'],
+        ['Compare `L` at the endpoints and at `y = 15` (Method 1)', 'The domain `y > 0` has no endpoints to compare: `L(y)` has no value at 0 and no right end. Method 1 needs a closed interval.', T_METH],
+        ['`L′(10) < 0`', 'One test point on one side is not enough. Method 2 needs the sign of `L′` on both sides of 15, and Method 3 needs the sign of `L″` on the whole domain.', T_METH]] },
+      { lead: 'Find the length along the wall.', ask: 'x =', num: true, ans: '30',
+        wrongs: [['15', '15 is the depth `y`. Use `x = F{450}{y}`.']],
+        hints: ['Use `x = F{450}{y}` with `y = 15`.'] },
       { lead: 'Which sentence answers the question?', ok: 0, pick: [
-        ['The pen is 40 m along the wall and 20 m deep, and it uses 80 m of fence.', '`L(20) = 40 + 2 · 20 = 80`.'],
-        ['The pen is 40 m along the wall and 20 m deep, and it uses 80 m² of fence.', 'Fence is a length, so it is measured in meters. Square meters measure the area of the pen.'],
-        ['The pen is 20 m along the wall and 40 m deep, and it uses 80 m of fence.', 'The depth is `y = 20`. The side along the wall is `x = 40`. Swapped, the pen would need `20 + 2 · 40 = 100` m.'],
-        ['The pen is 40 m along the wall and 20 m deep, and it uses 120 m of fence.', 'The wall side needs no fence, so the fence is `x + 2y = 40 + 40 = 80` m.']] }],
-    graph: { x: [0, 60], y: [0, 300], ticks: { x: 10, y: 50 }, fns: [{ f: fence2, domain: [2.5, 60] }], dots: [{ x: 20, y: 80, label: '(20, 80)', at: 's' }],
-      aria: 'The graph of L(y) = 800/y + 2y for y from 0 to 60. It falls steeply from the left, reaches its lowest point at (20, 80), then rises.' },
-    after: '`L(y)` is concave up everywhere on `y > 0`, and its lowest point is `(20, 80)`.' },
+        ['The pen is 30 m along the wall and 15 m deep, and it uses 60 m of fence.', '`L(15) = 30 + 2 · 15 = 60`.'],
+        ['The pen is 30 m along the wall and 15 m deep, and it uses 60 m² of fence.', 'Fence is a length, so it is measured in meters. Square meters measure the area of the pen.'],
+        ['The pen is 15 m along the wall and 30 m deep, and it uses 60 m of fence.', 'The depth is `y = 15`. The side along the wall is `x = 30`. Swapped, the pen would need `15 + 2 · 30 = 75` m.'],
+        ['The pen is 30 m along the wall and 15 m deep, and it uses 90 m of fence.', 'The wall side needs no fence, so the fence is `x + 2y = 30 + 30 = 60` m.']] }],
+    graph: { x: [0, 50], y: [0, 200], ticks: { x: 10, y: 50 }, fns: [{ f: fence2, domain: [2.5, 50] }], dots: [{ x: 15, y: 60, label: '(15, 60)', at: 's' }],
+      aria: 'The graph of L(y) = 450/y + 2y for y from 0 to 50. It falls steeply from the left, reaches its lowest point at (15, 60), then rises.' },
+    after: '`L(y)` is concave up everywhere on `y > 0`, and its lowest point is `(15, 60)`.' },
 
   /* 3. an open box from a sheet: the figure is the constraint, two critical points, Method 1 */
   { id: 'p3', sec: 'sec-box', v: 'h', task: 'An open box is made from a 16 in by 10 in sheet of cardboard by cutting a square of side `h` from each corner and folding up the sides. Find the largest volume the box can have.', teach: T_OPT5,
@@ -2995,47 +2995,47 @@ var PROBLEMS = [
     after: 'On `[0, 5]` the volume is 0 at both ends and highest at `(2, 144)`.' },
 
   /* 4. a closed box with three prices: the volume is fixed, cost is minimized, Method 3 */
-  { id: 'p4', sec: 'sec-box', v: 'w', task: 'A closed box with a square base must hold 16 cubic feet. The bottom costs \$5 per square foot, the top \$3 per square foot and each of the four sides \$2 per square foot. Find the dimensions of the cheapest box.', teach: T_OPT2,
+  { id: 'p4', sec: 'sec-box', v: 'w', task: 'A closed box with a square base must hold 54 cubic feet. The bottom costs \$7 per square foot, the top \$5 per square foot and each of the four sides \$3 per square foot. Find the dimensions of the cheapest box.', teach: T_OPT2,
     fig: drawing({ x: [-1, 6.6], y: [-0.8, 3.9], segs: poly([[0, 0], [4, 0], [4, 2.6], [0, 2.6], [0, 0]], 'ink').concat(poly([[0, 2.6], [1.6, 3.6], [5.6, 3.6], [4, 2.6]], 'ink'), poly([[4, 0], [5.6, 1], [5.6, 3.6]], 'ink')),
-      texts: [{ x: 2, y: -0.45, text: 'w' }, { x: 5.15, y: 0.25, text: 'w' }, { x: -0.45, y: 1.3, text: 'h' }, { x: 2, y: 1.3, text: '16 ft³' }],
-      aria: 'A closed box drawn in perspective. Its base is w by w and its height is h. It holds 16 cubic feet.'}),
+      texts: [{ x: 2, y: -0.45, text: 'w' }, { x: 5.15, y: 0.25, text: 'w' }, { x: -0.45, y: 1.3, text: 'h' }, { x: 2, y: 1.3, text: '54 ft³' }],
+      aria: 'A closed box drawn in perspective. Its base is w by w and its height is h. It holds 54 cubic feet.'}),
     steps: [
       { lead: 'What do you minimize, and what is the constraint?', ok: 0, pick: [
-        ['Minimize `C = 5w^2 + 3w^2 + 2(4wh)`; constraint `w^2 h = 16`', 'Each face costs its area times its price: the bottom and top are `w` by `w`, and each of the four sides is `w` by `h`.'],
-        ['Minimize `V = w^2 h`; constraint `5w^2 + 3w^2 + 2(4wh) = 16`', 'The volume is fixed at 16, so `w^2 h = 16` is the constraint. The cost is what changes, so that is what you minimize.'],
-        ['Minimize `C = 5w^2 + 3w^2 + 2(2wh)`; constraint `w^2 h = 16`', 'The box has four sides, each `w` by `h`, so the sides cost `2 · 4wh`.']] },
-      { lead: 'Solve the constraint for `h`.', ask: 'h =', ans: '16/w^2',
-        wrongs: [['16/w', 'The volume is `w · w · h = w^2 h`. Divide 16 by `w^2`.'], ['16 - w^2', '`w^2 h = 16` is a product. Divide both sides by `w^2`.']],
-        hints: ['Divide both sides of `w^2 h = 16` by `w^2`.'] },
-      { lead: 'Combine like terms, `C = 8w^2 + 8wh`, then substitute `h = F{16}{w^2}`.', ask: 'C(w) =', ans: '8w^2 + 128/w',
-        wrongs: [['8w^2 + 128/w^2', '`8w · F{16}{w^2} = F{128w}{w^2} = F{128}{w}`. One `w` cancels.'],
-          ['8w^2 + 64/w', 'The four sides cost `2 · 4wh = 8wh`, and `8w · F{16}{w^2} = F{128}{w}`.']],
-        hints: ['Replace `h` with `F{16}{w^2}` in `8wh` and cancel one `w`.'] },
+        ['Minimize `C = 7w^2 + 5w^2 + 3(4wh)`; constraint `w^2 h = 54`', 'Each face costs its area times its price: the bottom and top are `w` by `w`, and each of the four sides is `w` by `h`.'],
+        ['Minimize `V = w^2 h`; constraint `7w^2 + 5w^2 + 3(4wh) = 54`', 'The volume is fixed at 54, so `w^2 h = 54` is the constraint. The cost is what changes, so that is what you minimize.'],
+        ['Minimize `C = 7w^2 + 5w^2 + 3(2wh)`; constraint `w^2 h = 54`', 'The box has four sides, each `w` by `h`, so the sides cost `3 · 4wh`.']] },
+      { lead: 'Solve the constraint for `h`.', ask: 'h =', ans: '54/w^2',
+        wrongs: [['54/w', 'The volume is `w · w · h = w^2 h`. Divide 54 by `w^2`.'], ['54 - w^2', '`w^2 h = 54` is a product. Divide both sides by `w^2`.']],
+        hints: ['Divide both sides of `w^2 h = 54` by `w^2`.'] },
+      { lead: 'Combine like terms, `C = 12w^2 + 12wh`, then substitute `h = F{54}{w^2}`.', ask: 'C(w) =', ans: '12w^2 + 648/w',
+        wrongs: [['12w^2 + 648/w^2', '`12w · F{54}{w^2} = F{648w}{w^2} = F{648}{w}`. One `w` cancels.'],
+          ['12w^2 + 324/w', 'The four sides cost `3 · 4wh = 12wh`, and `12w · F{54}{w^2} = F{648}{w}`.']],
+        hints: ['Replace `h` with `F{54}{w^2}` in `12wh` and cancel one `w`.'] },
       { lead: 'What is the domain of `C(w)`?', ok: 0, pick: [
-        ['`w > 0`', 'Any positive width gives a positive height `h = F{16}{w^2}`, and nothing caps `w`.'],
-        ['`0 < w < 4`', 'Nothing caps `w`. A wide, flat box still holds 16 cubic feet, with `h = F{16}{w^2}`.'],
-        ['`0 ≤ w ≤ 16`', 'At `w = 0` there is no box and `C(w)` has no value. Nothing caps `w` at 16 either.']] },
-      { ask: 'C′(w) =', ans: '16w - 128/w^2',
-        wrongs: [['16w + 128/w^2', 'Write `F{128}{w} = 128w^(−1)`. Its derivative is `−128w^(−2)`, which is negative.'],
-          ['16w - 128/w', 'The power rule lowers the exponent of `128w^(−1)` to `−2`, so its derivative is `−F{128}{w^2}`.']],
-        hints: ['Write `F{128}{w}` as `128w^(−1)` and use the power rule.'] },
-      { lead: 'Solve `C′(w) = 0`.', ask: 'w =', num: true, ans: '2',
-        wrongs: [['8', '`16w = F{128}{w^2}` gives `w^3 = 8`. Take the cube root.']],
-        hints: ['Multiply both sides of `16w = F{128}{w^2}` by `w^2` to get `16w^3 = 128`.'] },
-      { lead: 'Which statement shows that `w = 2` gives the cheapest box?', ok: 0, pick: [
-        ['`C″(w) = 16 + F{256}{w^3} > 0` for every `w > 0` (Method 3)', '`C` is concave up on its whole domain, so its one critical point gives the absolute minimum.'],
-        ['Compare `C` at the endpoints and at `w = 2` (Method 1)', 'The domain `w > 0` has no endpoints to compare. Method 1 needs a closed interval.', T_METH],
-        ['`C(2) = 96` is the smallest value found so far', 'A few values do not show that no other `w` costs less. Use a method that covers the whole domain.', T_METH]] },
-      { lead: 'Find the height.', ask: 'h =', num: true, ans: '4',
-        wrongs: [['8', '`h = F{16}{w^2} = F{16}{4}`. Square the width before dividing.']],
-        hints: ['Use `h = F{16}{w^2}` with `w = 2`.'] },
+        ['`w > 0`', 'Any positive width gives a positive height `h = F{54}{w^2}`, and nothing caps `w`.'],
+        ['`0 < w < 6`', 'Nothing caps `w`. A wide, flat box still holds 54 cubic feet, with `h = F{54}{w^2}`.'],
+        ['`0 ≤ w ≤ 54`', 'At `w = 0` there is no box and `C(w)` has no value. Nothing caps `w` at 54 either.']] },
+      { ask: 'C′(w) =', ans: '24w - 648/w^2',
+        wrongs: [['24w + 648/w^2', 'Write `F{648}{w} = 648w^(−1)`. Its derivative is `−648w^(−2)`, which is negative.'],
+          ['24w - 648/w', 'The power rule lowers the exponent of `648w^(−1)` to `−2`, so its derivative is `−F{648}{w^2}`.']],
+        hints: ['Write `F{648}{w}` as `648w^(−1)` and use the power rule.'] },
+      { lead: 'Solve `C′(w) = 0`.', ask: 'w =', num: true, ans: '3',
+        wrongs: [['27', '`24w = F{648}{w^2}` gives `w^3 = 27`. Take the cube root.']],
+        hints: ['Multiply both sides of `24w = F{648}{w^2}` by `w^2` to get `24w^3 = 648`.'] },
+      { lead: 'Which statement shows that `w = 3` gives the cheapest box?', ok: 0, pick: [
+        ['`C″(w) = 24 + F{1296}{w^3} > 0` for every `w > 0` (Method 3)', '`C` is concave up on its whole domain, so its one critical point gives the absolute minimum.'],
+        ['Compare `C` at the endpoints and at `w = 3` (Method 1)', 'The domain `w > 0` has no endpoints to compare. Method 1 needs a closed interval.', T_METH],
+        ['`C(3) = 324` is the smallest value found so far', 'A few values do not show that no other `w` costs less. Use a method that covers the whole domain.', T_METH]] },
+      { lead: 'Find the height.', ask: 'h =', num: true, ans: '6',
+        wrongs: [['18', '`h = F{54}{w^2} = F{54}{9}`. Square the width before dividing.']],
+        hints: ['Use `h = F{54}{w^2}` with `w = 3`.'] },
       { lead: 'Which sentence answers the question?', ok: 0, pick: [
-        ['The cheapest box has a 2 ft by 2 ft base and is 4 ft tall. It costs \$96.', '`C(2) = 32 + 64 = 96` dollars.'],
-        ['The cheapest box has a 2 ft by 2 ft base and is 4 ft tall. It costs \$96 per square foot.', '96 is the total cost in dollars. The prices per square foot were \$5, \$3 and \$2.'],
-        ['The cheapest box has a 2 ft by 2 ft base and is 2 ft tall.', 'That box holds only 8 cubic feet. The height is `h = F{16}{2^2} = 4` ft.']] }],
-    graph: { x: [0, 6], y: [0, 300], ticks: { x: 1, y: 50 }, fns: [{ f: cost4, domain: [0.4, 6] }], dots: [{ x: 2, y: 96, label: '(2, 96)', at: 's' }],
-      aria: 'The graph of C(w) = 8w squared plus 128/w for w from 0 to 6. It falls steeply from the left, reaches its lowest point at (2, 96), then rises.' },
-    after: '`C(w)` is concave up on `w > 0`, and its lowest point is `(2, 96)`.' },
+        ['The cheapest box has a 3 ft by 3 ft base and is 6 ft tall. It costs \$324.', '`C(3) = 108 + 216 = 324` dollars.'],
+        ['The cheapest box has a 3 ft by 3 ft base and is 6 ft tall. It costs \$324 per square foot.', '324 is the total cost in dollars. The prices per square foot were \$7, \$5 and \$3.'],
+        ['The cheapest box has a 3 ft by 3 ft base and is 3 ft tall.', 'That box holds only 27 cubic feet. The height is `h = F{54}{3^2} = 6` ft.']] }],
+    graph: { x: [0, 7], y: [0, 1000], ticks: { x: 1, y: 200 }, fns: [{ f: cost4, domain: [0.65, 7] }], dots: [{ x: 3, y: 324, label: '(3, 324)', at: 's' }],
+      aria: 'The graph of C(w) = 12w squared plus 648/w for w from 0 to 7. It falls steeply from the left, reaches its lowest point at (3, 324), then rises.' },
+    after: '`C(w)` is concave up on `w > 0`, and its lowest point is `(3, 324)`.' },
 
   /* 5. a rectangle under a parabola: the curve is the constraint, Method 1 */
   { id: 'p5', sec: 'sec-curve', task: 'A rectangle has its base on the x-axis and its two upper corners on the parabola `y = 12 − x^2`. Find the largest area it can have.', teach: T_MORE2,
@@ -3321,14 +3321,14 @@ function sectionHTML(s, n) {
   return sec(s.id, String(n + 1), s.title, s.lede) + col(ps.map(function (p) { return blk(p.id, function () { return problemHTML(p); }); }).join(''));
 }
 function backHTML() {
-  return sec('sec-back', '', 'Back to Paul', '') + prose('', [
-    'If one type of problem gave you trouble, rework Paul’s practice problems for it: [Optimization](' + PAUL_P + 'Optimization.aspx) or [More Optimization](' + PAUL_P + 'MoreOptimization.aspx).',
-    'Next, complete Problem Set 8, Parts 1 and 2. Unit 11 begins in Paul’s notes with [Indefinite Integrals](' + PAUL_C + 'IndefiniteIntegrals.aspx).']);
+  return sec('sec-back', '', 'What Comes Next', '') + prose('', [
+    'If one kind of problem gave you trouble, find the example of that kind in Unit 10 Worked Examples, cover its solution, and work it by hand.',
+    'Next, complete the Unit 10 Problem Set.']);
 }
 function page() {
-  return header('Unit 10 Practice', SECTIONS_P.map(function (s) { return ['#' + s.id, s.nav || s.title]; }).concat([['#sec-back', 'Back to Paul']])) +
-    '<main id="top">' + hero({ kicker: 'Calculus I · Unit 10', title: 'Unit 10 Practice: Optimization',
-      dek: 'Use this page after the Unit 10 reading and Paul’s practice problems. For each problem, set up the function, its domain and the method, then type each line of the work. Each line is checked before the next one opens. Type a power with ⟦^⟧, as in ⟦x^2⟧, and put a whole top or bottom in parentheses, as in ⟦(x + 1)/(x − 2)⟧.' }) +
+  return header('Unit 10 Practice', SECTIONS_P.map(function (s) { return ['#' + s.id, s.nav || s.title]; }).concat([['#sec-back', 'Next']])) +
+    '<main id="top">' + hero({ kicker: 'Calculus I · Unit 10: Optimization', title: 'Unit 10 Practice',
+      dek: 'Use this page after you read Unit 10: Optimization and Unit 10 Worked Examples. For each problem, set up the function, its domain and the method, then type each line of the work. Each line is checked before the next one opens. Type a power with ⟦^⟧, as in ⟦x^2⟧, and put a whole top or bottom in parentheses, as in ⟦(x + 1)/(x − 2)⟧.' }) +
     SECTIONS_P.map(sectionHTML).join('') + backHTML() + '</main>';
 }
 expose({ PROBLEMS: PROBLEMS, problemHTML: problemHTML, formProblem: formProblem, stepDone: stepDone });
@@ -3381,7 +3381,7 @@ selfcheck.add('a finished problem shows every step, Done and its closing figure;
 });
 
 selfcheck.add('setup rows accept any equivalent form of the one-variable function', function () {
-  var cases = [['p1-2', '30y^2 - y^3'], ['p2-3', '2y + 800/y'], ['p3-1', '4h^3 - 52h^2 + 160h'], ['p4-3', '(8w^3 + 128)/w'], ['p5-2', '24x - 2x^3'],
+  var cases = [['p1-2', '30y^2 - y^3'], ['p2-3', '2y + 450/y'], ['p3-1', '4h^3 - 52h^2 + 160h'], ['p4-3', '(12w^3 + 648)/w'], ['p5-2', '24x - 2x^3'],
     ['p6-2', 'x^2 - 7x + 16'], ['p7-4', '12000 + 200x - 20x^2'], ['p8-1', 'x^2/16 + (24 - x)^2/16'], ['p5-3', '2sqrt(3)'], ['p6-8', '1.936']];
   var bad = cases.filter(function (c) { return judge(ITEMS[c[0]], c[1]).st !== 'ok'; }).map(function (c) { return c[0] + ' "' + c[1] + '" -> ' + judge(ITEMS[c[0]], c[1]).st; });
   return bad.length ? { ok: false, detail: bad.join('; ') } : { ok: true, detail: cases.length + ' cases' };
