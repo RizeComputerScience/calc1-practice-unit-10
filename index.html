@@ -2812,6 +2812,13 @@ var T_MORE2 = paulEx('MoreOptimization', 'More Optimization Problems', 'Example 
 var T_MORE3 = paulEx('MoreOptimization', 'More Optimization Problems', 'Example 3');
 var T_MORE4 = paulEx('MoreOptimization', 'More Optimization Problems', 'Example 4');
 var T_NUMS = T_OPT1;
+/* More Practice (2026-11-10): Paul's examples of the same kinds, and the two rules the line problem needs */
+var T_OPT3 = paulEx('Optimization', 'Optimization', 'Example 3');
+var T_OPT4 = paulEx('Optimization', 'Optimization', 'Example 4');
+var T_MORE6 = paulEx('MoreOptimization', 'More Optimization Problems', 'Example 6');
+var T_QUOT = paulEx('ProductQuotientRule', 'Product and Quotient Rule');
+var T_LINES = ['https://tutorial.math.lamar.edu/Classes/Alg/Lines.aspx', 'Paul’s Online Math Notes: Lines'];
+var SEE_P2 = ['#ex-p2', 'See Problem 2'], SEE_P5 = ['#ex-p5', 'See Problem 5'], SEE_P7 = ['#ex-p7', 'See Problem 7'];
 
 /* ---------------- form guards (see the problem object above) ---------------- */
 var FORM = {
@@ -2834,7 +2841,8 @@ var SECTIONS_P = [
   { id: 'sec-fence', nav: 'Numbers and Fences', title: 'Numbers and Fences', lede: 'These go with Paul’s [Optimization](' + T_OPT1[0] + '), Example 1.' },
   { id: 'sec-box', nav: 'Boxes', title: 'Boxes', lede: 'These go with Paul’s [Optimization](' + T_OPT2[0] + '), Examples 2 and 5.' },
   { id: 'sec-curve', nav: 'On a Curve', title: 'Shapes and Points on a Curve', lede: 'These go with Paul’s [More Optimization Problems](' + T_MORE2[0] + '), Examples 2 and 3.' },
-  { id: 'sec-more', nav: 'Revenue and Wire', title: 'Revenue and a Cut Wire', lede: 'Problem 8 goes with Paul’s [More Optimization Problems](' + T_MORE4[0] + '), Example 4.' }
+  { id: 'sec-more', nav: 'Revenue and Wire', title: 'Revenue and a Cut Wire', lede: 'Problem 8 goes with Paul’s [More Optimization Problems](' + T_MORE4[0] + '), Example 4.' },
+  { id: 'sec-extra', nav: 'More Practice', title: 'More Practice (Only If You Want It)', lede: 'Nothing in this section is required. If a kind of problem above took you more than one try, the problem of the same kind here gives you another go: Problems 9 and 10 for fences, Problems 11 and 12 for a box and a can, Problems 13 to 15 for shapes, lines and distances, Problem 16 for revenue, and Problem 17 for a cut wire. The Unit 10 Problem Set comes next either way.' }
 ];
 
 /* setup drawings: plot() with no axes, one unit the same length across and up (pad 8, window aspect about 1.6) */
@@ -2865,6 +2873,19 @@ function dist6(x) { return (x - 4) * (x - 4) + x; }
 function rev7(x) { return (20 + x) * (600 - 20 * x); }
 function wire8(x) { return Math.pow(x / 4, 2) + Math.pow((24 - x) / 4, 2); }
 var R12 = Math.sqrt(12);
+/* More Practice closing-figure functions (Problems 9 to 17) */
+function fence9(x) { return 2 * x + 4050 / x; }
+function budget10(x) { return 54 * x - 9 * x * x / 20; }
+function box11(x) { return 75 * x - x * x * x / 4; }
+function can12(r) { return Math.PI * r * r + 128 * Math.PI / r; }
+function circ13(x) { return 4 * x * Math.sqrt(25 - x * x); }
+function tri14(a) { return 5 * a * a / (2 * (a - 2)); }
+function wire15(x) { return Math.sqrt(x * x + 25) + Math.sqrt((36 - x) * (36 - x) + 100); }
+function rev16(p) { return 900 * p - 50 * p * p; }
+function wire17(x) { return x * x / 16 + 3 * (56 - x) * (56 - x) / 64; }
+var R300 = Math.sqrt(300), X13 = 5 / Math.SQRT2;
+/* an ellipse as two half-curves, for the can in Problem 12 (one unit the same length across and up) */
+function halfEllipse(cx, cy, a, b, sign) { return function (x) { var u = (x - cx) / a; return u * u > 1 ? NaN : cy + sign * b * Math.sqrt(1 - u * u); }; }
 
 /* ---------------- the problems ---------------- */
 var PROBLEMS = [
@@ -3181,7 +3202,429 @@ var PROBLEMS = [
         ['Cut the wire in half, at 12 cm, for the smallest total area, 18 cm.', 'An area is measured in square centimeters, cm². Centimeters measure the wire.']] }],
     graph: { x: [0, 24], y: [0, 40], ticks: { x: 4, y: 10 }, fns: [{ f: wire8 }], dots: [{ x: 0, y: 36, label: '(0, 36)', at: 'e' }, { x: 12, y: 18, label: '(12, 18)', at: 's' }, { x: 24, y: 36, label: '(24, 36)', at: 'w' }],
       aria: 'The graph of the total area A(x) for x from 0 to 24: a parabola opening up, 36 at both ends and lowest at (12, 18).' },
-    after: 'The total area is lowest at `(12, 18)` and highest at both ends, where the wire makes a single square.' }
+    after: 'The total area is lowest at `(12, 18)` and highest at both ends, where the wire makes a single square.' },
+
+  /* ================= More Practice (optional), added 2026-11-10 by the clarity rebuild =================
+     Problems 9 to 17 (ids m1 to m9), section sec-extra. Sources: twins 10.5, 10.8, 10.2 and 10.7
+     (plan/clarity-rebuild/twins/unit-10.md) and the five rows of plan/clarity-rebuild/units/unit-10/value-add.md (Paul's
+     Optimization 4, 5 and 7, More Optimization 5 and 7), the Paul problems with new numbers. Every key and wrong value:
+     SPEC.md, "More Practice", and tests/check_math.py. */
+
+  /* 9. (twin 10.5) a field with a divider: the area is fixed, the fence is minimized, Method 3 */
+  { id: 'm1', sec: 'sec-extra', task: 'A rectangular field of 1350 square meters is fenced on all four sides, and one more fence, parallel to the sides of length `y`, divides it into two pens. Find the dimensions that use the least fence in total, and that length of fence.', teach: T_OPT1,
+    fig: drawing({ x: [0, 10], y: [0.4, 6.6], segs: poly([[2, 1.5], [8, 1.5], [8, 5.3], [2, 5.3], [2, 1.5]], 'ink', false, 3).concat(poly([[5, 1.5], [5, 5.3]], 'ink', false, 3)),
+      texts: [{ x: 5, y: 6, text: 'area 1350 m²' }, { x: 3.5, y: 0.95, text: 'x' }, { x: 1.4, y: 3.4, text: 'y' }, { x: 8.6, y: 3.4, text: 'y' }, { x: 5.45, y: 3.4, text: 'y' }],
+      aria: 'A rectangle fenced on all four sides, with a fence down the middle splitting it into two pens. The two sides of length x run across; the two ends and the middle fence each have length y. The area is 1350 square meters.' }),
+    steps: [
+      { lead: 'What do you minimize, and what is the constraint?', ok: 0, pick: [
+        ['Minimize `F = 2x + 3y`; constraint `xy = 1350`', 'The fence covers two sides of length `x` and three of length `y`: the two ends and the divider. The area is fixed at 1350.'],
+        ['Minimize `F = 2x + 2y`; constraint `xy = 1350`', 'That leaves out the divider, a third fence of length `y`.'],
+        ['Minimize `A = xy`; constraint `2x + 3y = 1350`', '1350 is the area, which is fixed, so `xy = 1350` is the constraint. The fence length is what changes, so that is what you minimize.', SEE_P2],
+        ['Minimize `F = 3x + 2y`; constraint `xy = 1350`', 'The divider is parallel to the sides of length `y`, so `y` is the length that appears three times: `F = 2x + 3y`.']] },
+      { lead: 'Solve the constraint for `y`.', ask: 'y =', ans: '1350/x',
+        wrongs: [['1350x', 'Divide both sides of `xy = 1350` by `x`.'], ['1350 - x', '`xy = 1350` is a product, not a sum. Divide both sides by `x`.']],
+        hints: ['Divide both sides of `xy = 1350` by `x`.'] },
+      { lead: 'Substitute it into `F = 2x + 3y`.', ask: 'F(x) =', ans: '2x + 4050/x',
+        wrongs: [['2x + 1350/x', 'Three fences have length `y`, so the fence includes `3y = 3 · F{1350}{x} = F{4050}{x}`.'],
+          ['2x + 450/x', 'Multiply by 3, do not divide: `3 · F{1350}{x} = F{4050}{x}`.']],
+        hints: ['Replace `y` in `3y` with `F{1350}{x}`, then multiply by 3.'] },
+      { lead: 'What is the domain of `F(x)`?', ok: 0, pick: [
+        ['`x > 0`', 'Any positive `x` gives a positive `y = F{1350}{x}`, and nothing in the problem caps `x`.'],
+        ['`0 ≤ x ≤ 1350`', 'At `x = 0` there is no field and `F{4050}{x}` has no value. Nothing caps `x` at 1350 either: a long, thin field still has area 1350.'],
+        ['`0 < x < 675`', 'Nothing caps `x`. For any positive `x`, the side `y = F{1350}{x}` is positive and the area is 1350.']] },
+      { ask: 'F′(x) =', ans: '2 - 4050/x^2',
+        wrongs: [['2 + 4050/x^2', 'Write `F{4050}{x} = 4050x^(−1)`. Its derivative is `−4050x^(−2)`, which is negative.'],
+          ['2 - 4050/x', 'The power rule lowers the exponent of `4050x^(−1)` to `−2`, so its derivative is `−F{4050}{x^2}`.']],
+        hints: ['Write `F{4050}{x}` as `4050x^(−1)` and use the power rule.'] },
+      { lead: 'Solve `F′(x) = 0` in the domain.', ask: 'x =', num: true, ans: '45',
+        wrongs: [['2025', '`2 = F{4050}{x^2}` gives `x^2 = 2025`. Take the square root.'], ['-45', '`−45` also solves `x^2 = 2025`, but it is not in the domain `x > 0`.']],
+        hints: ['`2 = F{4050}{x^2}` gives `2x^2 = 4050`.'] },
+      { lead: 'Which statement shows that `x = 45` uses the least fence?', ok: 0, pick: [
+        ['`F″(x) = F{8100}{x^3} > 0` for every `x > 0` (Method 3)', '`F` is concave up on its whole domain, so its one critical point gives the absolute minimum.'],
+        ['Compare `F` at the endpoints and at `x = 45` (Method 1)', 'The domain `x > 0` has no endpoints to compare: `F(x)` has no value at 0 and no right end. Method 1 needs a closed interval.', T_METH],
+        ['`F′(45) = 0`', '`F′(45) = 0` makes 45 a critical point. It does not say whether `F(45)` is a maximum, a minimum or neither.', T_METH]] },
+      { lead: 'Find `y`, the length of the ends and of the divider.', ask: 'y =', num: true, ans: '30',
+        wrongs: [['45', '45 is `x`. Use `y = F{1350}{x}`.']],
+        hints: ['Use `y = F{1350}{x}` with `x = 45`.'] },
+      { lead: 'Find the least length of fence.', ask: 'F(45) =', num: true, ans: '180',
+        wrongs: [['150', 'That is `2x + 2y`, the outside alone. Add the divider: `F = 2 · 45 + 3 · 30`.'],
+          ['195', 'That counts `x` three times. The divider has length `y`, so `F = 2 · 45 + 3 · 30`.']],
+        hints: ['`F = 2x + 3y` with `x = 45` and `y = 30`.'] },
+      { lead: 'Which sentence answers the question?', ok: 0, pick: [
+        ['The field is 45 m by 30 m, with a 30 m divider, and it uses 180 m of fence.', '`2 · 45 + 3 · 30 = 90 + 90 = 180`.'],
+        ['The field is 45 m by 30 m, with a 30 m divider, and it uses 180 m² of fence.', 'Fence is a length, so it is measured in meters. Square meters measure the area of the field.'],
+        ['The field is a square, about 36.7 m on a side, and it uses about 183.7 m of fence.', 'The divider adds a third fence of length `y`, so the best field is not a square. The square uses `5 · 36.7 ≈ 183.7` m, more than 180.']] }],
+    graph: { x: [0, 120], y: [0, 400], ticks: { x: 20, y: 100 }, fns: [{ f: fence9, domain: [10.5, 120] }], dots: [{ x: 45, y: 180, label: '(45, 180)', at: 's' }],
+      aria: 'The graph of F(x) = 2x + 4050/x for x from about 10 to 120. It falls steeply from the left, reaches its lowest point at (45, 180), then rises.' },
+    after: '`F(x)` is concave up on `x > 0`, and its lowest point is `(45, 180)`.' },
+
+  /* 10. (value-add: Paul, Optimization 4, new budget) a budget is the constraint, the area is maximized, Method 1 */
+  { id: 'm2', sec: 'sec-extra', task: 'A rectangular field is fenced on all four sides, and there is \$1080 to spend. As the figure shows, fence for the top side costs \$7 per foot, fence for the bottom side costs \$2 per foot, and fence for each of the two sides of length `y` costs \$10 per foot. Find the dimensions that enclose the largest area.', teach: T_OPT1,
+    fig: drawing({ x: [0, 12], y: [0, 7.5], segs: poly([[3, 1.6], [9, 1.6], [9, 5.6], [3, 5.6], [3, 1.6]], 'ink', false, 3),
+      texts: [{ x: 6, y: 6.3, text: 'x, \$7/ft' }, { x: 6, y: 0.85, text: 'x, \$2/ft' }, { x: 1.55, y: 4.0, text: 'y' }, { x: 1.55, y: 3.1, text: '\$10/ft' }, { x: 10.45, y: 4.0, text: 'y' }, { x: 10.45, y: 3.1, text: '\$10/ft' }],
+      aria: 'A rectangle seen from above. The top side has length x and costs 7 dollars per foot; the bottom side has length x and costs 2 dollars per foot; the left and right sides have length y and cost 10 dollars per foot each.' }),
+    steps: [
+      { lead: 'What do you maximize, and what is the constraint?', ok: 0, pick: [
+        ['Maximize `A = xy`; constraint `9x + 20y = 1080`', 'The top and bottom cost `7x + 2x = 9x`, the two sides cost `10y + 10y = 20y`, and all \$1080 is spent.'],
+        ['Maximize `A = xy`; constraint `2x + 2y = 1080`', '1080 is dollars, not feet. Each side costs its length times its price: `7x + 2x + 10y + 10y = 1080`.', T_OPT2],
+        ['Minimize `C = 9x + 20y`; constraint `xy = 1080`', 'The money is fixed at \$1080, so the cost is the constraint. The area is what changes, so that is what you maximize.'],
+        ['Maximize `A = xy`; constraint `9x + 10y = 1080`', 'There are two sides of length `y`, each at \$10 per foot, so together they cost `20y`.']] },
+      { lead: 'Solve the constraint for `y`.', ask: 'y =', ans: '(1080 - 9x)/20',
+        wrongs: [['(1080 - 9x)/10', 'Divide by 20, the number in front of `y` in `9x + 20y = 1080`.'],
+          ['54 - 9x', 'Divide every term by 20: `F{1080 − 9x}{20} = 54 − F{9x}{20}`.']],
+        hints: ['Subtract `9x` from both sides, then divide both sides by 20.'] },
+      { lead: 'Substitute it into `A = xy` and multiply out.', ask: 'A(x) =', ans: '54x - 9x^2/20', form: FORM.expanded,
+        wrongs: [['54 - 9x/20', 'That is `y`. The area is `x` times `y`.'],
+          ['54x - 9x^2', 'Keep the 20: `x · F{9x}{20} = F{9x^2}{20}`.']],
+        hints: ['Write `y = 54 − F{9x}{20}`, then multiply each term by `x`.'] },
+      { lead: 'What is the domain of `A(x)`?', ok: 0, pick: [
+        ['`0 ≤ x ≤ 120`', 'A length cannot be negative, and at `x = 120` the top and bottom use all \$1080, which leaves `y = 0`.'],
+        ['`0 ≤ x ≤ 1080`', '1080 is dollars. The money runs out when `9x = 1080`, at `x = 120`.'],
+        ['`x > 0`', 'The money caps `x`: `y = 54 − F{9x}{20}` is negative past `x = 120`.']] },
+      { ask: 'A′(x) =', ans: '54 - 9x/10',
+        wrongs: [['54 - 9x/20', 'The derivative of `F{9x^2}{20}` is `F{18x}{20} = F{9x}{10}`. Bring the power down as a factor.'],
+          ['54 - 18x', 'Keep the 20: the derivative of `F{9x^2}{20}` is `F{18x}{20}`.']],
+        hints: ['Use the power rule on each term of `54x − F{9x^2}{20}`.'] },
+      { lead: 'Solve `A′(x) = 0`.', ask: 'x =', num: true, ans: '60',
+        wrongs: [['120', 'At `x = 120` all the money goes to the top and bottom and the area is 0. Solve `54 − F{9x}{10} = 0`.']],
+        hints: ['`54 = F{9x}{10}` gives `9x = 540`.'] },
+      { lead: 'Which statement shows that `x = 60` gives the largest area?', ok: 0, pick: [
+        ['`A(0) = 0`, `A(120) = 0` and `A(60) = 1620` (Method 1)', 'The domain is a closed interval and `A` is continuous on it, so the largest of these values is the absolute maximum.'],
+        ['`A′(60) = 0`', '`A′(60) = 0` makes 60 a critical point. It does not say whether `A(60)` is the largest value.', T_METH],
+        ['The field with `x = 60` uses all \$1080', 'Every field in the domain uses all \$1080: that is the constraint. Compare `A(60)` with the values at the endpoints.', T_METH]] },
+      { lead: 'Find `y`.', ask: 'y =', num: true, ans: '27',
+        wrongs: [['54', '54 is `y` at `x = 0`. Put `x = 60` into `y = 54 − F{9x}{20}`.'], ['60', '60 is `x`. Use `y = 54 − F{9x}{20}`.']],
+        hints: ['`F{9 · 60}{20} = 27`, and `54 − 27 = 27`.'] },
+      { lead: 'Which sentence answers the question?', ok: 0, pick: [
+        ['The top and bottom are 60 ft and the two sides are 27 ft, so the field encloses 1620 ft².', '`60 · 27 = 1620` square feet, and the fence costs `9 · 60 + 20 · 27 = 1080` dollars.'],
+        ['The top and bottom are 27 ft and the two sides are 60 ft, so the field encloses 1620 ft².', 'The sides of length `y` are 27 ft. With 60 ft sides at \$10 per foot the fence would cost `9 · 27 + 20 · 60 = 1443` dollars, more than \$1080.'],
+        ['The top and bottom are 60 ft and the two sides are 27 ft, so the field encloses 1620 ft.', 'Area is measured in square feet, ft². Feet measure the fence.']] }],
+    graph: { x: [0, 120], y: [0, 1800], ticks: { x: 20, y: 400 }, fns: [{ f: budget10 }], dots: [{ x: 0, y: 0 }, { x: 60, y: 1620, label: '(60, 1620)', at: 'n' }, { x: 120, y: 0 }],
+      aria: 'The graph of A(x) = 54x − 9x squared/20 for x from 0 to 120. It is 0 at both ends and highest at (60, 1620).' },
+    after: 'The area is 0 at both ends of `[0, 120]` and largest at `(60, 1620)`.' },
+
+  /* 11. (value-add: Paul, Optimization 5, new amount) fixed material, largest volume, Method 3 */
+  { id: 'm3', sec: 'sec-extra', task: 'An open box (no top) with a square base is made from 300 square centimeters of cardboard, all of it used. Find the dimensions that give the largest volume, and that volume.', teach: T_OPT3,
+    fig: drawing({ x: [-1, 6.6], y: [-0.8, 3.9], segs: poly([[0, 0], [4, 0], [4, 2.6], [0, 2.6], [0, 0]], 'ink').concat(poly([[0, 2.6], [1.6, 3.6], [5.6, 3.6], [4, 2.6]], 'muted', true, 1.5), poly([[4, 0], [5.6, 1], [5.6, 3.6]], 'ink')),
+      texts: [{ x: 2, y: -0.45, text: 'x' }, { x: 5.15, y: 0.25, text: 'x' }, { x: -0.45, y: 1.3, text: 'h' }, { x: 2, y: 1.3, text: 'no top' }],
+      aria: 'An open box drawn in perspective, with its open top dashed. Its base is x by x and its height is h.' }),
+    steps: [
+      { lead: 'What do you maximize, and what is the constraint?', ok: 0, pick: [
+        ['Maximize `V = x^2 h`; constraint `x^2 + 4xh = 300`', 'The cardboard is the base, `x^2`, and four sides, each `x` by `h`. There is no top.'],
+        ['Minimize `S = x^2 + 4xh`; constraint `x^2 h = 300`', 'The cardboard is fixed at 300 square centimeters, so `x^2 + 4xh = 300` is the constraint. The volume is what changes, so that is what you maximize.'],
+        ['Maximize `V = x^2 h`; constraint `2x^2 + 4xh = 300`', 'That counts a top as well. The box is open, so the base `x^2` appears once.']] },
+      { lead: 'Solve the constraint for `h`.', ask: 'h =', ans: '(300 - x^2)/(4x)',
+        wrongs: [['(300 - x^2)/4', 'Divide by `4x`, the whole factor in front of `h` in `4xh`.'],
+          ['300/(4x) - x^2', 'Subtract `x^2` first, then divide all of `300 − x^2` by `4x`.']],
+        hints: ['Subtract `x^2` from both sides, then divide both sides by `4x`.'] },
+      { lead: 'Substitute it into `V = x^2 h` and simplify.', ask: 'V(x) =', ans: '75x - x^3/4',
+        wrongs: [['x^2(300 - x^2)/4', 'Divide by `4x`, not by 4: `x^2 · F{300 − x^2}{4x} = F{x(300 − x^2)}{4}`. One `x` cancels.'],
+          ['300x - x^3', 'Keep the 4 in the bottom: `F{x(300 − x^2)}{4} = 75x − F{x^3}{4}`.']],
+        hints: ['`x^2 · F{300 − x^2}{4x}`: cancel one `x`, then divide each term by 4.'] },
+      { lead: 'What is the domain of `V(x)`?', ok: 0, pick: [
+        ['`0 < x < sqrt(300) ≈ 17.3`', 'The height `h = F{300 − x^2}{4x}` must be positive, so `x^2 < 300`.'],
+        ['`0 < x < 300`', 'The base alone uses `x^2` of the 300 square centimeters, so `x^2 < 300`, not `x < 300`.'],
+        ['`x > 0`', 'The base cannot use more than all the cardboard. Past `x = sqrt(300)`, the height `h` is negative.']] },
+      { ask: 'V′(x) =', ans: '75 - 3x^2/4',
+        wrongs: [['75 - x^2/4', 'The derivative of `F{x^3}{4}` is `F{3x^2}{4}`. Bring the 3 down.'],
+          ['75x - 3x^2/4', 'The derivative of `75x` is 75.']],
+        hints: ['Use the power rule on each term of `75x − F{x^3}{4}`.'] },
+      { lead: 'Solve `V′(x) = 0` in the domain.', ask: 'x =', num: true, ans: '10',
+        wrongs: [['100', '`F{3x^2}{4} = 75` gives `x^2 = 100`. Take the square root.'], ['-10', '`−10` also solves `x^2 = 100`, but it is not in the domain.']],
+        hints: ['`75 = F{3x^2}{4}` gives `3x^2 = 300`.'] },
+      { lead: 'Which statement shows that `x = 10` gives the largest volume?', ok: 0, pick: [
+        ['`V″(x) = −F{3x}{2} < 0` for every `x` in the domain (Method 3)', '`V` is concave down on its whole domain, so its one critical point gives the absolute maximum.'],
+        ['Compare `V` at the endpoints and at `x = 10` (Method 1)', 'The domain is open: at `x = 0` there is no box and `h` has no value. Method 1 needs a closed interval.', T_METH],
+        ['`V(10) = 500` is more than `V(5) ≈ 344`', 'Two values do not show that no other `x` gives more. Use a method that covers the whole domain.', T_METH]] },
+      { lead: 'Find the height.', ask: 'h =', num: true, ans: '5',
+        wrongs: [['20', 'That divides by `x`. Divide by `4x = 40`: `h = F{300 − 100}{40}`.'], ['50', 'That divides by 4. Divide by `4x = 40`: `h = F{300 − 100}{40}`.']],
+        hints: ['Use `h = F{300 − x^2}{4x}` with `x = 10`.'] },
+      { lead: 'Find the largest volume.', ask: 'V(10) =', num: true, ans: '500',
+        wrongs: [['300', '300 is the cardboard, in square centimeters. The volume is `x^2 h = 10^2 · 5`.'], ['50', 'That is `x · h`. The base is `x` by `x`, so `V = 10^2 · 5`.']],
+        hints: ['`V = x^2 h` with `x = 10` and `h = 5`.'] },
+      { lead: 'Which sentence answers the question?', ok: 0, pick: [
+        ['The box has a 10 cm by 10 cm base and is 5 cm tall. It holds 500 cm³.', 'Check the cardboard: `10^2 + 4 · 10 · 5 = 100 + 200 = 300`.'],
+        ['The box has a 10 cm by 10 cm base and is 5 cm tall. It holds 500 cm².', 'Volume is measured in cubic centimeters, cm³. Square centimeters measure the cardboard.'],
+        ['The box is a cube, 10 cm on each edge, and holds 1000 cm³.', 'A 10 cm cube with no top needs `100 + 4 · 100 = 500` square centimeters of cardboard, more than 300. The height is 5 cm.']] }],
+    graph: { x: [0, 18], y: [0, 600], ticks: { x: 5, y: 100 }, fns: [{ f: box11, domain: [0, R300] }], dots: [{ x: 10, y: 500, label: '(10, 500)', at: 'n' }],
+      aria: 'The graph of V(x) = 75x − x cubed/4 for x from 0 to the square root of 300, about 17.3. It rises from 0 to its highest point (10, 500) and falls back to 0.' },
+    after: '`V(x)` is concave down on its domain, and its highest point is `(10, 500)`.' },
+
+  /* 12. (value-add: Paul, Optimization 7, new volume) a can with no top: least material, Method 3 */
+  { id: 'm4', sec: 'sec-extra', v: 'r', task: 'A cylindrical can has a bottom but no top, and it must hold `64pi` cubic centimeters, about 201 cm³. Find the radius and height that use the least metal, and that amount of metal.', teach: T_OPT4,
+    fig: drawing({ x: [0, 10], y: [0.2, 6.45], segs: [{ from: [3, 1.5], to: [3, 5], role: 'ink', width: 2.5 }, { from: [7, 1.5], to: [7, 5], role: 'ink', width: 2.5 }, { from: [5, 5], to: [7, 5], role: 'muted', width: 1.5, dash: true }],
+      fns: [{ f: halfEllipse(5, 5, 2, 0.7, 1), domain: [3, 7], role: 'ink', width: 2.5 }, { f: halfEllipse(5, 5, 2, 0.7, -1), domain: [3, 7], role: 'ink', width: 2.5 },
+        { f: halfEllipse(5, 1.5, 2, 0.7, -1), domain: [3, 7], role: 'ink', width: 2.5 }, { f: halfEllipse(5, 1.5, 2, 0.7, 1), domain: [3, 7], role: 'muted', width: 1.5, dash: true }],
+      texts: [{ x: 6, y: 4.97, text: 'r', at: 's' }, { x: 7.45, y: 3.25, text: 'h' }, { x: 5, y: 6.05, text: 'open top' }],
+      aria: 'A cylinder standing upright, open at the top. The radius of its circular top edge is r and its height is h.' }),
+    steps: [
+      { lead: 'What do you minimize, and what is the constraint?', ok: 0, pick: [
+        ['Minimize `S = pi r^2 + 2pi r h`; constraint `pi r^2 h = 64pi`', 'The metal is the bottom, a circle of area `pi r^2`, and the side, which unrolls into a rectangle `2pi r` long and `h` tall. There is no top.'],
+        ['Minimize `S = 2pi r^2 + 2pi r h`; constraint `pi r^2 h = 64pi`', 'That counts a top as well. This can has only a bottom, so `pi r^2` appears once.'],
+        ['Minimize `S = pi r^2 + 2pi r h`; constraint `2pi r h = 64pi`', '`64pi` is a volume, so the constraint is the volume, `pi r^2 h = 64pi`. `2pi r h` is the area of the side.'],
+        ['Minimize `V = pi r^2 h`; constraint `pi r^2 + 2pi r h = 64pi`', 'The volume is fixed at `64pi`, so it is the constraint. The metal is what changes, so that is what you minimize.']] },
+      { lead: 'Solve the constraint for `h`.', ask: 'h =', ans: '64/r^2',
+        wrongs: [['64pi/r^2', 'Divide both sides by `pi r^2`. The `pi` cancels: `h = F{64pi}{pi r^2} = F{64}{r^2}`.'], ['64/r', 'The volume has `r^2`. Divide 64 by `r^2`.']],
+        hints: ['Divide both sides of `pi r^2 h = 64pi` by `pi r^2`.'] },
+      { lead: 'Substitute it into `S = pi r^2 + 2pi r h`.', ask: 'S(r) =', ans: 'pi r^2 + 128pi/r',
+        wrongs: [['pi r^2 + 128pi/r^2', '`2pi r · F{64}{r^2} = F{128pi r}{r^2} = F{128pi}{r}`. One `r` cancels.'],
+          ['pi r^2 + 64pi/r', 'The side is `2pi r h`, so keep the 2: `2pi r · F{64}{r^2} = F{128pi}{r}`.']],
+        hints: ['Replace `h` with `F{64}{r^2}` in `2pi r h` and cancel one `r`.'] },
+      { lead: 'What is the domain of `S(r)`?', ok: 0, pick: [
+        ['`r > 0`', 'Any positive radius gives a positive height `h = F{64}{r^2}`, and nothing caps `r`.'],
+        ['`0 < r < 4`', 'Nothing caps `r`. A wide, shallow can still holds `64pi`, with `h = F{64}{r^2}`.'],
+        ['`0 ≤ r ≤ 64`', 'At `r = 0` there is no can and `F{128pi}{r}` has no value. Nothing caps `r` at 64 either.']] },
+      { ask: 'S′(r) =', ans: '2pi r - 128pi/r^2',
+        wrongs: [['2pi r + 128pi/r^2', 'Write `F{128pi}{r} = 128pi r^(−1)`. Its derivative is `−128pi r^(−2)`, which is negative.'],
+          ['2pi r - 128pi/r', 'The power rule lowers the exponent of `128pi r^(−1)` to `−2`, so its derivative is `−F{128pi}{r^2}`.'],
+          ['2r - 128/r^2', '`pi` is a constant factor, so it stays: the derivative of `pi r^2` is `2pi r`.']],
+        hints: ['Write `F{128pi}{r}` as `128pi r^(−1)` and use the power rule. `pi` is a constant.'] },
+      { lead: 'Solve `S′(r) = 0`.', ask: 'r =', num: true, ans: '4',
+        wrongs: [['64', '`2pi r = F{128pi}{r^2}` gives `r^3 = 64`. Take the cube root.'], ['8', 'Multiplying `2pi r = F{128pi}{r^2}` by `r^2` gives `r^3 = 64`, a cube, so take the cube root, not the square root.']],
+        hints: ['Multiply both sides of `2pi r = F{128pi}{r^2}` by `r^2`, then divide by `2pi`.'] },
+      { lead: 'Which statement shows that `r = 4` uses the least metal?', ok: 0, pick: [
+        ['`S″(r) = 2pi + F{256pi}{r^3} > 0` for every `r > 0` (Method 3)', '`S` is concave up on its whole domain, so its one critical point gives the absolute minimum.'],
+        ['Compare `S` at the endpoints and at `r = 4` (Method 1)', 'The domain `r > 0` has no endpoints to compare. Method 1 needs a closed interval.', T_METH],
+        ['`S′(3) < 0`', 'One test point on one side is not enough. Method 2 needs the sign of `S′` on both sides of 4, and Method 3 needs the sign of `S″` on the whole domain.', T_METH]] },
+      { lead: 'Find the height.', ask: 'h =', num: true, ans: '4',
+        wrongs: [['16', '`h = F{64}{r^2} = F{64}{16}`. Square the radius before dividing.']],
+        hints: ['Use `h = F{64}{r^2}` with `r = 4`.'],
+        why: 'The best can with no top is exactly as tall as its radius.' },
+      { lead: 'Find the least amount of metal.', ask: 'S(4) =', num: true, ans: '48pi',
+        wrongs: [[['64pi', '201.1'], 'That counts a top as well: `2pi · 4^2 + 32pi`. The can has only a bottom, `pi · 4^2 = 16pi`.'],
+          ['48', 'Keep the `pi`: `S(4) = 16pi + 32pi = 48pi ≈ 150.8`.'],
+          [['32pi', '100.5'], 'That is the side alone. Add the bottom, `pi · 4^2 = 16pi`.']],
+        hints: ['`S(4) = pi · 4^2 + F{128pi}{4}`.'] },
+      { lead: 'Which sentence answers the question?', ok: 0, pick: [
+        ['The can has radius 4 cm and height 4 cm, and it uses `48pi ≈ 150.8` cm² of metal.', 'Check the volume: `pi · 4^2 · 4 = 64pi`.'],
+        ['The can has radius 4 cm and height 4 cm, and it uses `48pi ≈ 150.8` cm³ of metal.', 'Metal covers a surface, so it is measured in square centimeters, cm². Cubic centimeters measure what the can holds.'],
+        ['The can has diameter 4 cm and height 4 cm, and it uses `48pi ≈ 150.8` cm² of metal.', 'The radius is 4 cm, so the diameter is 8 cm.']] }],
+    graph: { x: [0, 10], y: [0, 500], ticks: { x: 2, y: 100 }, fns: [{ f: can12, domain: [0.9, 10] }], dots: [{ x: 4, y: 48 * Math.PI, label: '(4, 150.8)', at: 's' }],
+      aria: 'The graph of S(r) = pi r squared + 128 pi/r for r from about 1 to 10. It falls steeply from the left, reaches its lowest point at about (4, 150.8), then rises.' },
+    after: '`S(r)` is concave up on `r > 0`, and its lowest point is `(4, 48pi) ≈ (4, 150.8)`.' },
+
+  /* 13. (twin 10.8) a rectangle inside a circle: the circle is the constraint, Method 2 */
+  { id: 'm5', sec: 'sec-extra', task: 'A rectangle is drawn inside the circle `x^2 + y^2 = 25` with all four corners on the circle and its sides parallel to the axes. Its corner in the first quadrant is `(x, y)`. Find the largest area the rectangle can have.', teach: T_MORE2,
+    fig: { w: 380, h: 344, x: [-6.5, 6.5], y: [-6, 6], ticks: { x: 2, y: 2 }, fns: [{ f: function (x) { return Math.sqrt(Math.max(0, 25 - x * x)); }, domain: [-5, 5] }, { f: function (x) { return -Math.sqrt(Math.max(0, 25 - x * x)); }, domain: [-5, 5] }],
+      segs: poly([[-3.5, -3.5707], [3.5, -3.5707], [3.5, 3.5707], [-3.5, 3.5707], [-3.5, -3.5707]], 'outside', false, 2.5), dots: [{ x: 3.5, y: 3.5707, label: '(x, y)', at: 'ne' }],
+      texts: [{ x: 1.6, y: -3.75, text: '2x', at: 's' }, { x: 3.6, y: -0.6, text: '2y', at: 'e' }],
+      aria: 'The circle x squared + y squared = 25, of radius 5 about the origin, with a rectangle inside it whose four corners are on the circle. The corner in the first quadrant is labeled (x, y); the rectangle is 2x wide and 2y tall.' },
+    steps: [
+      { lead: 'What do you maximize, and what is the constraint?', ok: 0, pick: [
+        ['Maximize `A = (2x)(2y) = 4xy`; constraint `x^2 + y^2 = 25`', 'The rectangle runs from `−x` to `x` across and from `−y` to `y` up, and its corner lies on the circle.'],
+        ['Maximize `A = xy`; constraint `x^2 + y^2 = 25`', '`xy` is only the quarter of the rectangle in the first quadrant. The whole rectangle is `2x` wide and `2y` tall.', SEE_P5],
+        ['Maximize `A = 4xy`; constraint `2x + 2y = 25`', 'The 25 belongs to the circle. The condition every rectangle here meets is that its corner lies on `x^2 + y^2 = 25`.']] },
+      { lead: 'Solve the constraint for `y`, the top half of the circle.', ask: 'y =', ans: 'sqrt(25 - x^2)',
+        wrongs: [['25 - x^2', 'That is `y^2`. Take the square root.'], ['5 - x', 'A square root does not split over a difference: `sqrt(25 − x^2)` is not `5 − x`.']],
+        hints: ['Subtract `x^2` from both sides, then take the positive square root.'] },
+      { lead: 'Substitute it into `A = 4xy`.', ask: 'A(x) =', ans: '4x sqrt(25 - x^2)',
+        wrongs: [['x sqrt(25 - x^2)', 'The rectangle is `2x` by `2y`, so `A = 4xy`.'], ['4x(25 - x^2)', '`y` is `sqrt(25 − x^2)`, not `25 − x^2`.']],
+        hints: ['Replace `y` in `4xy` with `sqrt(25 − x^2)`.'] },
+      { lead: 'What is the domain of `A(x)`?', ok: 0, pick: [
+        ['`0 < x < 5`', 'The corner is in the first quadrant, so `x > 0`, and at `x = 5` the height `2sqrt(25 − x^2)` is 0.'],
+        ['`−5 < x < 5`', 'The corner `(x, y)` is in the first quadrant, so `x > 0`.'],
+        ['`0 < x < 25`', '25 is the radius squared. The circle reaches only to `x = 5`.']] },
+      { lead: 'Differentiate with the product rule and the chain rule.', ask: 'A′(x) =', ans: '4sqrt(25 - x^2) - 4x^2/sqrt(25 - x^2)',
+        wrongs: [['4sqrt(25 - x^2) + 4x^2/sqrt(25 - x^2)', 'The inside `25 − x^2` has derivative `−2x`, which makes the second term negative.'],
+          ['4sqrt(25 - x^2) + 2x/sqrt(25 - x^2)', 'Multiply by the derivative of the inside, `−2x`: `Dx sqrt(25 − x^2) = F{−2x}{2sqrt(25 − x^2)}`.'],
+          ['-4x^2/sqrt(25 - x^2)', 'That is only the second product-rule term. Add the first, `4 · sqrt(25 − x^2)`.']],
+        hints: ['Product rule: `(4x)′ · sqrt(25 − x^2) + 4x · Dx sqrt(25 − x^2)`, and `Dx sqrt(25 − x^2) = F{−x}{sqrt(25 − x^2)}`.'] },
+      { show: ['A′(x) = F{4(25 − x^2) − 4x^2}{sqrt(25 − x^2)}', '= F{100 − 8x^2}{sqrt(25 − x^2)}'] },
+      { lead: 'Solve `A′(x) = 0` in the domain. A fraction is zero where its top is zero.', ask: 'x =', num: true, ans: '5/sqrt(2)',
+        wrongs: [['12.5', 'That is `x^2`. Take the square root: `x = sqrt(12.5) = F{5}{sqrt(2)}`.'], [['-5/sqrt(2)', '-3.536', '-3.54'], 'That also solves `8x^2 = 100`, but it is not in the domain `0 < x < 5`.'],
+          ['5', 'At `x = 5` the bottom `sqrt(25 − x^2)` is 0, so `A′` has no value there, and 5 is not in the domain. Set the top `100 − 8x^2` equal to 0.']],
+        hints: ['`100 − 8x^2 = 0` gives `x^2 = 12.5`.'] },
+      { lead: 'Which statement shows that `x = F{5}{sqrt(2)} ≈ 3.54` gives the largest area?', ok: 0, pick: [
+        ['`A′(x) > 0` for `0 < x < 3.54` and `A′(x) < 0` for `3.54 < x < 5` (Method 2)', 'The bottom of `A′` is positive, so `A′` has the sign of `100 − 8x^2`: `A` rises and then falls.'],
+        ['`A′(x) < 0` for `0 < x < 3.54` and `A′(x) > 0` for `3.54 < x < 5` (Method 2)', 'Check the signs: at `x = 1` the top `100 − 8x^2 = 92` is positive, so `A′ > 0` before 3.54. These signs would make it a minimum.', T_METH],
+        ['`A′(F{5}{sqrt(2)}) = 0`', 'That makes `F{5}{sqrt(2)}` a critical point. It does not say whether the area there is the largest.', T_METH],
+        ['The area at 3.54 is more than `A(3) = 48`', 'Two values do not show that no other `x` gives more. Use a method that covers the whole domain.', T_METH]] },
+      { lead: 'Find the largest area. At this `x`, `y = sqrt(25 − 12.5) = F{5}{sqrt(2)}` too.', ask: '"largest area" =', num: true, ans: '50',
+        wrongs: [['12.5', 'That is `xy`, the quarter of the rectangle in the first quadrant. Multiply by 4.'], ['25', 'Each side is twice the coordinate, so the area is `(2x)(2y) = 4 · 12.5`.']],
+        hints: ['`A = 4xy` with `x = y = F{5}{sqrt(2)}`, so `xy = 12.5`.'] },
+      { lead: 'Which sentence answers the question?', ok: 0, pick: [
+        ['The largest rectangle is a square about 7.07 on a side, and its area is 50.', 'Its side is `2 · F{5}{sqrt(2)} = 5sqrt(2) ≈ 7.07`, and `(5sqrt(2))^2 = 50`.'],
+        ['The largest rectangle is a square about 3.54 on a side, and its area is 50.', '3.54 is `x`, half the width. The side is `2x ≈ 7.07`.'],
+        ['The largest area is about 3.54.', 'That is where the maximum happens, the first coordinate of the corner. The largest area is 50.']] }],
+    graph: { x: [0, 5], y: [0, 60], ticks: { x: 1, y: 10 }, fns: [{ f: circ13, domain: [0, 5] }], dots: [{ x: X13, y: 50, label: '(3.54, 50)', at: 'n' }],
+      aria: 'The graph of A(x) = 4x times the square root of 25 − x squared for x from 0 to 5. It rises from 0 to its highest point at about (3.54, 50) and falls back to 0 at x = 5.' },
+    after: 'The area rises until `x ≈ 3.54` and falls after it. The best rectangle is a square.' },
+
+  /* 14. (value-add: Paul, More Optimization 5) a line through a point: intercepts as the variables, Method 2 */
+  { id: 'm6', sec: 'sec-extra', v: 'a', task: 'A line through the point `(2, 5)` crosses the positive x-axis at `(a, 0)` and the positive y-axis at `(0, b)`, and makes a right triangle with the axes. Find the line that makes the area of that triangle as small as possible.', teach: ['#ex-p5', 'See Problem 5: an area set by a point on a curve'],
+    fig: { x: [0, 8], y: [0, 9], ticks: { x: 1, y: 2 }, labels: { x: 'x' }, segs: [{ from: [0, 7.5], to: [6, 0], role: 'outside', width: 2.5 }],
+      dots: [{ x: 2, y: 5, label: '(2, 5)', at: 'ne' }, { x: 6, y: 0, label: '(a, 0)', at: 'ne' }, { x: 0, y: 7.5, label: '(0, b)', at: 'ne' }],
+      aria: 'The first quadrant with one line through the point (2, 5). It meets the x-axis at (a, 0) and the y-axis at (0, b), and with the axes it bounds a right triangle.' },
+    figCap: 'One such line. Each `a` gives a different line and a different triangle.',
+    steps: [
+      { lead: 'The line passes through `(a, 0)` and `(2, 5)`. Find its slope.', ask: 'm =', ans: '5/(2 - a)',
+        wrongs: [['(2 - a)/5', 'Slope is rise over run: the change in `y`, 5, over the change in `x`, `2 − a`.', T_LINES],
+          ['5/(a - 2)', 'Subtract in the same order on the top and the bottom: `F{5 − 0}{2 − a}`.', T_LINES]],
+        hints: ['Slope `= F{y_2 − y_1}{x_2 − x_1}` with the points `(a, 0)` and `(2, 5)`.'], teach: T_LINES },
+      { lead: 'The line is `y = m(x − a)`. Put in `x = 0` to find `b`.', ask: 'b =', ans: '5a/(a - 2)',
+        wrongs: [['5a/(2 - a)', 'At `x = 0`, `y = m(0 − a) = −ma`. Keep the minus sign: `−F{5a}{2 − a} = F{5a}{a − 2}`.'],
+          ['5/(2 - a)', 'That is the slope `m`. The intercept is `b = −ma`.']],
+        hints: ['`b = m(0 − a) = −a · F{5}{2 − a}`.'], teach: T_LINES },
+      { lead: 'Write the area of the triangle as a function of `a` alone.', ask: 'A(a) =', ans: '5a^2/(2(a - 2))',
+        wrongs: [['5a^2/(a - 2)', 'The triangle is half of an `a` by `b` rectangle: `A = F{1}{2} ab`.']],
+        hints: ['`A = F{1}{2} · a · b` with `b = F{5a}{a − 2}`.'] },
+      { lead: 'What is the domain of `A(a)`?', ok: 0, pick: [
+        ['`a > 2`', 'To make a triangle in the first quadrant, the line slopes down through `(2, 5)`, so it meets the x-axis to the right of 2. Then `b = F{5a}{a − 2}` is positive.'],
+        ['`0 < a < 2`', 'With `a` between 0 and 2 the line slopes up through `(2, 5)`, so `b` is negative and there is no triangle in the first quadrant.'],
+        ['`a > 0`', 'For `0 < a ≤ 2` there is no triangle in the first quadrant: at `a = 2` the line is vertical, and left of 2 it slopes up.']] },
+      { lead: 'Differentiate with the quotient rule.', ask: 'A′(a) =', ans: '5(a^2 - 4a)/(2(a - 2)^2)',
+        wrongs: [['5a', 'That divides the derivative of the top, `10a`, by the derivative of the bottom, 2. Use the quotient rule: `F{f′g − fg′}{g^2}`.', T_QUOT],
+          ['-5(a^2 - 4a)/(2(a - 2)^2)', 'The quotient rule starts with the derivative of the top: `F{10a · 2(a − 2) − 5a^2 · 2}{(2(a − 2))^2}`. The order is reversed.', T_QUOT],
+          ['5(a^2 - 4a)/(a - 2)', 'Square the whole bottom: the quotient rule divides by `(2(a − 2))^2 = 4(a − 2)^2`.', T_QUOT]],
+        hints: ['Top `f = 5a^2`, bottom `g = 2(a − 2) = 2a − 4`. Then `f′ = 10a` and `g′ = 2`.'] },
+      { show: 'A′(a) = F{5a(a − 4)}{2(a − 2)^2}' },
+      { lead: 'Solve `A′(a) = 0` in the domain.', ask: 'a =', num: true, ans: '4',
+        wrongs: [['0', '`a = 0` makes the top 0, but the domain is `a > 2`.'], ['2', 'At `a = 2` the bottom is 0, so `A′` has no value there, and 2 is not in the domain.']],
+        hints: ['Set each factor of the top, `5a(a − 4)`, equal to 0, and keep the solution with `a > 2`.'] },
+      { lead: 'Which statement shows that `a = 4` gives the smallest area?', ok: 0, pick: [
+        ['`A′(a) < 0` for `2 < a < 4` and `A′(a) > 0` for `a > 4` (Method 2)', 'The bottom of `A′` is positive, so `A′` has the sign of `a(a − 4)`: `A` falls and then rises.'],
+        ['Compare `A` at the endpoints and at `a = 4` (Method 1)', 'The domain `a > 2` has no endpoints: `A` has no value at 2 and no right end. Method 1 needs a closed interval.', T_METH],
+        ['`A(4) = 20` is less than `A(3) = 22.5`', 'Two values do not show that no other `a` gives less. Use a method that covers the whole domain.', T_METH]] },
+      { lead: 'Find `b`.', ask: 'b =', num: true, ans: '10',
+        wrongs: [['5', '5 is the y-coordinate of `(2, 5)`. Use `b = F{5a}{a − 2}` with `a = 4`.'], ['20', 'That is `5a`. Divide by `a − 2 = 2`.']],
+        hints: ['`b = F{5 · 4}{4 − 2}`.'] },
+      { lead: 'Find the smallest area.', ask: 'A(4) =', num: true, ans: '20',
+        wrongs: [['40', 'That is `ab`. The triangle is half of that: `F{1}{2} · 4 · 10`.']],
+        hints: ['`A = F{1}{2} ab` with `a = 4` and `b = 10`.'] },
+      { lead: 'Write the equation of the line, which passes through `(4, 0)` and `(0, 10)`.', ask: 'y =', v: 'x', ans: '-5x/2 + 10',
+        wrongs: [['5x/2 + 10', 'The line falls from `(0, 10)` to `(4, 0)`, so its slope is negative: `F{0 − 10}{4 − 0} = −F{5}{2}`.', T_LINES],
+          ['-2x/5 + 10', 'Slope is rise over run: `F{0 − 10}{4 − 0} = −F{5}{2}`, not `−F{2}{5}`.', T_LINES],
+          ['-5x/2 + 5', 'The y-intercept is `b = 10`. 5 is the y-coordinate of `(2, 5)`.']],
+        hints: ['The slope is `F{0 − 10}{4 − 0}` and the y-intercept is 10.'],
+        why: '`(2, 5)` is the midpoint of the segment from `(4, 0)` to `(0, 10)`.' }],
+    graph: { x: [2, 12], y: [0, 60], ticks: { x: 2, y: 10 }, labels: { x: 'a' }, fns: [{ f: tri14, domain: [2.2, 12] }], dots: [{ x: 4, y: 20, label: '(4, 20)', at: 's' }],
+      aria: 'The graph of A(a) = 5a squared/(2(a − 2)) for a from about 2.2 to 12. It falls steeply from the left, reaches its lowest point at (4, 20), then rises.' },
+    after: '`A(a)` falls until `a = 4` and rises after it. The best line, `y = −F{5}{2}x + 10`, has `(2, 5)` as the midpoint of its piece between the axes.' },
+
+  /* 15. (value-add: Paul, More Optimization 7, unequal poles) a sum of two square roots, Method 1 */
+  { id: 'm7', sec: 'sec-extra', task: 'Two poles, one 5 m tall and one 10 m tall, stand 36 m apart. A wire runs from the top of the shorter pole to a stake in the ground between the poles, then to the top of the taller pole. Where should the stake go so that the least wire is used?', teach: T_MORE6,
+    fig: drawing({ h: 147, x: [-3.5, 39.5], y: [-3, 12.5], segs: [{ from: [-2, 0], to: [38, 0], role: 'muted', width: 2 }, { from: [0, 0], to: [0, 5], role: 'ink', width: 4 }, { from: [36, 0], to: [36, 10], role: 'ink', width: 4 },
+        { from: [0, 5], to: [16, 0], role: 'outside', width: 2.5 }, { from: [16, 0], to: [36, 10], role: 'outside', width: 2.5 }],
+      texts: [{ x: -1.9, y: 2.5, text: '5' }, { x: 37.9, y: 5, text: '10' }, { x: 8, y: -1.6, text: 'x' }, { x: 26, y: -1.6, text: '36 − x' }, { x: 16, y: 1.4, text: 'stake' }],
+      aria: 'Two poles 36 meters apart on level ground: the left one 5 meters tall, the right one 10 meters tall. A wire runs from the top of the left pole down to a stake on the ground, x meters from the left pole and 36 − x meters from the right pole, then up to the top of the right pole.' }),
+    steps: [
+      { lead: 'Let `x` be the distance from the 5 m pole to the stake. Write the length of the wire from the top of the 5 m pole to the stake.', ask: '"first piece" =', ans: 'sqrt(x^2 + 25)',
+        wrongs: [['x + 5', 'The wire is the slanted side of a right triangle with legs `x` and 5. Use the Pythagorean theorem: `sqrt(x^2 + 5^2)`.'],
+          ['sqrt(x^2 + 5)', 'Square the height as well: `5^2 = 25`.'], ['x^2 + 25', 'That is the square of the length. Take the square root.']],
+        hints: ['The piece is the hypotenuse of a right triangle with legs `x` and 5.'] },
+      { lead: 'Write the length of the other piece, from the stake to the top of the 10 m pole.', ask: '"second piece" =', ans: 'sqrt((36 - x)^2 + 100)',
+        wrongs: [['sqrt(x^2 + 100)', 'The stake is `36 − x` from the 10 m pole, not `x`.'], ['sqrt((36 - x)^2 + 10)', 'Square the height as well: `10^2 = 100`.']],
+        hints: ['This right triangle has legs `36 − x` and 10.'] },
+      { lead: 'The wire is `L(x) = sqrt(x^2 + 25) + sqrt((36 − x)^2 + 100)`. What is its domain?', ok: 0, pick: [
+        ['`0 ≤ x ≤ 36`', 'The stake goes on the ground between the poles, at or next to either one.'],
+        ['`x ≥ 0`', 'The stake is between the poles, so `x ≤ 36`.'],
+        ['`0 ≤ x ≤ 10`', '10 is the height of the taller pole. The poles are 36 m apart, so `x` runs to 36.']] },
+      { lead: 'Differentiate. Each square root needs the chain rule.', ask: 'L′(x) =', ans: 'x/sqrt(x^2 + 25) - (36 - x)/sqrt((36 - x)^2 + 100)',
+        wrongs: [['x/sqrt(x^2 + 25) + (36 - x)/sqrt((36 - x)^2 + 100)', 'The inside `36 − x` has derivative `−1`, which makes the second term negative.'],
+          ['1/(2sqrt(x^2 + 25)) + 1/(2sqrt((36 - x)^2 + 100))', 'Multiply each term by the derivative of its inside: `Dx sqrt(x^2 + 25) = F{2x}{2sqrt(x^2 + 25)} = F{x}{sqrt(x^2 + 25)}`.']],
+        hints: ['`Dx sqrt(u) = F{u′}{2sqrt(u)}`. For the second root, `u = (36 − x)^2 + 100` and `u′ = 2(36 − x)(−1)`.'] },
+      { show: ['F{x}{sqrt(x^2 + 25)} = F{36 − x}{sqrt((36 − x)^2 + 100)}', 'F{x^2}{x^2 + 25} = F{(36 − x)^2}{(36 − x)^2 + 100}', '100x^2 = 25(36 − x)^2'] },
+      { lead: 'Setting `L′(x) = 0`, squaring both sides and cross-multiplying leaves the last line, so `4x^2 = (36 − x)^2`. Then `2x = 36 − x` or `2x = −(36 − x)`. Which solution is in the domain?', ask: 'x =', num: true, ans: '12',
+        wrongs: [['-36', '`2x = −(36 − x)` gives −36, which is not in the domain `0 ≤ x ≤ 36`.'],
+          ['18', '18 is halfway. The poles have different heights, so solve `2x = 36 − x`.'], ['24', '24 is the distance to the 10 m pole, `36 − x`. Solve `2x = 36 − x` for `x`.']],
+        hints: ['Solve `2x = 36 − x`: add `x` to both sides.'] },
+      { lead: 'Method 1 compares `L` at the critical point and at both endpoints. Find `L(12)`.', ask: 'L(12) =', num: true, ans: '39',
+        wrongs: [['13', 'That is the first piece alone, `sqrt(12^2 + 25)`. Add the second piece, `sqrt(24^2 + 100) = 26`.'],
+          ['26', 'That is the second piece alone. Add the first, `sqrt(12^2 + 25) = 13`.']],
+        hints: ['`sqrt(144 + 25) + sqrt(576 + 100)`.'] },
+      { lead: 'Find `L(0)`, with the stake at the foot of the 5 m pole.', ask: 'L(0) =', num: true, ans: '5 + sqrt(1396)',
+        wrongs: [['41', 'The second piece runs on a slant from the foot of the 5 m pole to the top of the 10 m pole: `sqrt(36^2 + 10^2)`, not 36.'],
+          [['sqrt(1396)', '37.36'], 'Add the first piece: at `x = 0` it is the 5 m pole itself.']],
+        hints: ['`L(0) = sqrt(0 + 25) + sqrt(36^2 + 100)`. Use a calculator for the second root.'],
+        why: 'At the other end, `L(36) = sqrt(1321) + 10 ≈ 46.35`.' },
+      { lead: 'Which statement shows that `x = 12` uses the least wire?', ok: 0, pick: [
+        ['`L(0) ≈ 42.36`, `L(12) = 39` and `L(36) ≈ 46.35` (Method 1)', '`L` is continuous on the closed interval `[0, 36]`, so the smallest of these values is the absolute minimum.'],
+        ['`L(12) = 39` is less than `L(0) ≈ 42.36`', 'Compare the other endpoint too. Method 1 uses every critical point and both endpoints.', T_METH],
+        ['`L′(12) = 0`', '`L′(12) = 0` makes 12 a critical point. It does not say whether `L(12)` is the smallest value.', T_METH]] },
+      { lead: 'Which sentence answers the question?', ok: 0, pick: [
+        ['Put the stake 12 m from the 5 m pole, which is 24 m from the 10 m pole. The wire is 39 m long.', '`13 + 26 = 39` meters.'],
+        ['Put the stake 12 m from the 10 m pole. The wire is 39 m long.', '`x` is measured from the 5 m pole. The stake is 12 m from the shorter pole and 24 m from the taller one.'],
+        ['Put the stake halfway, 18 m from each pole. The wire is 39 m long.', 'Halfway uses `L(18) ≈ 39.27` m of wire, more than 39. With unequal poles, the best stake is closer to the shorter one.']] }],
+    graph: { x: [0, 36], y: [30, 50], ticks: { x: 6, y: 5 }, fns: [{ f: wire15 }], dots: [{ x: 0, y: wire15(0) }, { x: 12, y: 39, label: '(12, 39)', at: 's' }, { x: 36, y: wire15(36) }],
+      aria: 'The graph of the wire length L(x) for x from 0 to 36. It starts at about 42.4, falls to its lowest point (12, 39), and rises to about 46.4 at x = 36.' },
+    after: 'The wire is shortest at `(12, 39)`. There the two pieces slope at the same angle: `F{5}{12} = F{10}{24}`.' },
+
+  /* 16. (twin 10.2) revenue from a demand function, Method 3 */
+  { id: 'm8', sec: 'sec-extra', v: 'p', task: 'A farm stand sells `A(p) = 900 − 50p` baskets of berries a week when the price is `p` dollars a basket. Find the price that brings in the most money, the number of baskets sold at that price, and that revenue.', teach: SEE_P7,
+    steps: [
+      { lead: 'The revenue is the price times the number sold, `R(p) = p · A(p)`. Write it and multiply out.', ask: 'R(p) =', ans: '900p - 50p^2', form: FORM.expanded,
+        wrongs: [['900 - 50p^2', 'Multiply every term by `p`: `p · 900 = 900p`.'], ['900p - 50p', '`p · 50p = 50p^2`.']],
+        hints: ['Multiply each term of `900 − 50p` by `p`.'] },
+      { lead: 'What is the domain of `R(p)`?', ok: 0, pick: [
+        ['`0 < p < 18`', 'The price is positive, and the number sold, `900 − 50p`, is positive only for `p < 18`.'],
+        ['`0 < p < 900`', '900 is the number sold at a price of 0. Sales reach 0 when `900 − 50p = 0`, at `p = 18`.'],
+        ['`p > 0`', 'Past `p = 18`, `900 − 50p` is negative, and the stand cannot sell a negative number of baskets.']] },
+      { ask: 'R′(p) =', ans: '900 - 100p',
+        wrongs: [['900 - 50p', 'The derivative of `50p^2` is `100p`. Bring the power down as a factor.'], ['900p - 100p', 'The derivative of `900p` is 900.']],
+        hints: ['Use the power rule on each term of `900p − 50p^2`.'] },
+      { lead: 'Solve `R′(p) = 0`.', ask: 'p =', num: true, ans: '9',
+        wrongs: [['18', '18 solves `900 − 50p = 0`, where sales reach 0. Solve `900 − 100p = 0`.']],
+        hints: ['Solve `900 − 100p = 0`.'] },
+      { lead: 'Which statement shows that `p = 9` brings in the most money?', ok: 0, pick: [
+        ['`R″(p) = −100 < 0` for every `p` (Method 3)', '`R` is concave down on its whole domain, so its one critical point gives the absolute maximum.'],
+        ['`R′(9) = 0`', '`R′(9) = 0` makes 9 a critical point. It does not say whether `R(9)` is the largest value.', T_METH],
+        ['`R(9) = 4050` is more than `R(8) = 4000`', 'One nearby value does not show that no other price brings in more. Use a method that covers the whole domain.', T_METH]] },
+      { lead: 'Find the number of baskets sold at that price.', ask: 'A(9) =', num: true, ans: '450',
+        wrongs: [['4050', 'That is the revenue. The number sold is `A(9) = 900 − 50 · 9`.']],
+        hints: ['`A(9) = 900 − 50 · 9`.'] },
+      { lead: 'Find the largest revenue.', ask: 'R(9) =', num: true, ans: '4050',
+        wrongs: [['450', 'That is the number of baskets. Multiply by the price, 9 dollars.'], ['8100', 'That is `900 · 9`, the first term alone. Subtract `50 · 9^2 = 4050`.']],
+        hints: ['`R(9) = 9 · A(9)`.'] },
+      { lead: 'Which sentence answers the question?', ok: 0, pick: [
+        ['Charge \$9 a basket. The stand sells 450 baskets and takes in \$4,050 a week.', '`9 · 450 = 4050` dollars.'],
+        ['Charge \$18 a basket.', 'At \$18 a basket the stand sells `900 − 50 · 18 = 0` baskets and takes in nothing.'],
+        ['Charge \$9 a basket. The stand sells 450 baskets and takes in \$4,050 per basket.', '\$4,050 is the total for the week. Each basket brings in \$9.']] }],
+    graph: { x: [0, 18], y: [0, 5000], ticks: { x: 3, y: [0, 1000, 2000, 3000, 4000] }, fns: [{ f: rev16, domain: [0, 18] }], dots: [{ x: 9, y: 4050, label: '(9, 4050)', at: 'n' }],
+      aria: 'The graph of R(p) = 900p − 50p squared for p from 0 to 18: a parabola opening down, 0 at both ends, with its highest point at (9, 4050).' },
+    after: 'The revenue rises to `R(9) = 4050` dollars and falls back to 0 at a price of \$18.' },
+
+  /* 17. (twin 10.7) a cut wire, a square and a 1-by-3 rectangle: a minimum inside, a maximum at an endpoint, Method 1 */
+  { id: 'm9', sec: 'sec-extra', task: 'A wire 56 cm long is cut into two pieces. One piece is bent into a square, and the other into a rectangle whose length is three times its width. A piece may have length 0, which means the wire is not cut. Where should the wire be cut to make the total area as small as possible, and as large as possible?', teach: T_MORE4,
+    fig: drawing({ x: [0, 26], y: [-11, 5], segs: [{ from: [1, 3], to: [10, 3], role: 'ink', width: 4 }, { from: [10, 3], to: [25, 3], role: 'ink', width: 4 }, { from: [10, 1.6], to: [10, 4.4], role: 'muted', width: 2.5 }]
+        .concat(poly([[2, -8], [6, -8], [6, -4], [2, -4], [2, -8]], 'ink', false, 3), poly([[11, -7], [23, -7], [23, -3], [11, -3], [11, -7]], 'ink', false, 3)),
+      texts: [{ x: 5.5, y: 4.3, text: 'x' }, { x: 17.5, y: 4.3, text: '56 − x' }, { x: 4, y: -9.95, text: 'side x/4' }, { x: 17, y: -8.45, text: '3w' }, { x: 10.2, y: -5, text: 'w' }],
+      aria: 'A 56 centimeter wire cut into a piece of length x and a piece of length 56 minus x. Below, the first piece is bent into a square of side x/4, and the second into a rectangle w wide and 3w long.' }),
+    steps: [
+      { lead: 'The square uses `x` cm, so its side is `F{x}{4}`. The rectangle uses the other `56 − x` cm and is `w` by `3w`. Find `w`.', ask: 'w =', ans: '(56 - x)/8',
+        wrongs: [['(56 - x)/4', 'The rectangle’s perimeter is `w + 3w + w + 3w = 8w`. Divide by 8.'],
+          ['(56 - x)/6', 'With a length of `3w`, the perimeter is `w + 3w + w + 3w = 8w`, not `6w`.']],
+        hints: ['Set the rectangle’s perimeter, `2w + 2 · 3w`, equal to `56 − x`.'] },
+      { lead: 'Write the total area of the square and the rectangle.', ask: 'A(x) =', ans: '(x/4)^2 + 3((56 - x)/8)^2',
+        wrongs: [['(x/4)^2 + ((56 - x)/8)^2', 'The rectangle is `w` by `3w`, so its area is `3w^2`.'],
+          ['x^2/4 + 3(56 - x)^2/8', 'Square the bottoms too: `(F{x}{4})^2 = F{x^2}{16}` and `(F{56 − x}{8})^2 = F{(56 − x)^2}{64}`.']],
+        hints: ['The square’s area is `(F{x}{4})^2`, and the rectangle’s is `w · 3w = 3w^2` with `w = F{56 − x}{8}`.'] },
+      { lead: 'What is the domain of `A(x)`?', ok: 0, pick: [
+        ['`0 ≤ x ≤ 56`', 'A piece cannot be negative or longer than the wire, and the problem allows a piece of length 0.'],
+        ['`0 < x < 56`', 'The problem allows a piece of length 0, so the ends count, and the largest area may be at one of them.'],
+        ['`0 ≤ x ≤ 28`', 'The square’s piece can be the longer one too. Any length from 0 to 56 works.']] },
+      { ask: 'A′(x) =', ans: 'x/8 - 3(56 - x)/32',
+        wrongs: [['x/8 + 3(56 - x)/32', 'By the chain rule, the inside `F{56 − x}{8}` has derivative `−F{1}{8}`, which makes the second term negative.'],
+          ['x/8 - 3(56 - x)/64', 'Bring the power 2 down: `Dx 3(F{56 − x}{8})^2 = 3 · 2 · F{56 − x}{8} · (−F{1}{8})`.']],
+        hints: ['`Dx (F{x}{4})^2 = 2 · F{x}{4} · F{1}{4}`. Do the same for `3(F{56 − x}{8})^2`, where the inside has derivative `−F{1}{8}`.'] },
+      { lead: 'Solve `A′(x) = 0`.', ask: 'x =', num: true, ans: '24',
+        wrongs: [['32', '32 cm is the rectangle’s piece, `56 − x`. Here `x` is the square’s piece.']],
+        hints: ['Multiply both sides of `F{x}{8} = F{3(56 − x)}{32}` by 32: `4x = 3(56 − x)`.'] },
+      { lead: 'Method 1 compares `A` at the critical point and at both endpoints.', ask: 'A(24) =', num: true, ans: '84',
+        wrongs: [['36', 'That is the square alone, `6^2`. Add the rectangle: `w = 4`, so its area is `3 · 4^2 = 48`.'], ['48', 'That is the rectangle alone. Add the square, of side 6.']],
+        hints: ['The square has side `F{24}{4} = 6`, and the rectangle has `w = F{32}{8} = 4`.'] },
+      { lead: 'At `x = 0` all of the wire makes the rectangle.', ask: 'A(0) =', num: true, ans: '147',
+        wrongs: [['49', 'That is `w^2` with `w = 7`. The rectangle is 7 by 21, so its area is `3 · 7^2`.'], ['196', 'At `x = 0` the square gets no wire. All 56 cm makes the rectangle.']],
+        hints: ['`w = F{56}{8} = 7`, and the area is `3w^2`.'] },
+      { lead: 'At `x = 56` all of the wire makes the square.', ask: 'A(56) =', num: true, ans: '196',
+        wrongs: [['147', 'At `x = 56` all of the wire makes the square, of side `F{56}{4} = 14`.'], ['784', 'That is `F{56^2}{4}`. The side is `F{56}{4} = 14`, and the area is `14^2`.']],
+        hints: ['The square has side `F{56}{4} = 14`.'] },
+      { lead: 'Which sentence answers the question?', ok: 0, pick: [
+        ['Cut 24 cm off for the square to get the smallest total area, 84 cm². For the largest, 196 cm², do not cut the wire: make one square.', 'The smallest value is at the critical point, and the largest is at the endpoint `x = 56`.'],
+        ['Cut 24 cm off for the square to get the largest total area.', '`A(24) = 84` is the smallest of 147, 84 and 196. The critical point gives the minimum here.'],
+        ['Cut 24 cm off for the square to get the smallest total area, 84 cm². For the largest, make one rectangle from all of the wire.', 'One rectangle gives 147 cm², less than the 196 cm² of one square.']] }],
+    graph: { x: [0, 56], y: [0, 220], ticks: { x: 8, y: 50 }, fns: [{ f: wire17 }], dots: [{ x: 0, y: 147, label: '(0, 147)', at: 'e' }, { x: 24, y: 84, label: '(24, 84)', at: 's' }, { x: 56, y: 196, label: '(56, 196)', at: 'w' }],
+      aria: 'The graph of the total area A(x) for x from 0 to 56: a parabola opening up, 147 at x = 0, lowest at (24, 84), and 196 at x = 56.' },
+    after: 'The total area is lowest at `(24, 84)` and highest at `x = 56`, where all of the wire makes one square.' }
 ];
 
 /* ================================ builder (from practice-unit-03; fig, figCap and an optional board added) ================================ */
@@ -3328,7 +3771,7 @@ function backHTML() {
 function page() {
   return header('Unit 10 Practice', SECTIONS_P.map(function (s) { return ['#' + s.id, s.nav || s.title]; }).concat([['#sec-back', 'Next']])) +
     '<main id="top">' + hero({ kicker: 'Calculus I · Unit 10: Optimization', title: 'Unit 10 Practice',
-      dek: 'Use this page after you read Unit 10: Optimization and Unit 10 Worked Examples. For each problem, set up the function, its domain and the method, then type each line of the work. Each line is checked before the next one opens. Type a power with ⟦^⟧, as in ⟦x^2⟧, and put a whole top or bottom in parentheses, as in ⟦(x + 1)/(x − 2)⟧.' }) +
+      dek: 'Use this page after you read Unit 10: Optimization and Unit 10 Worked Examples. For each problem, set up the function, its domain and the method, then type each line of the work. Each line is checked before the next one opens. Problems 9 to 17, under More Practice, are optional. Type a power with ⟦^⟧, as in ⟦x^2⟧, and put a whole top or bottom in parentheses, as in ⟦(x + 1)/(x − 2)⟧.' }) +
     SECTIONS_P.map(sectionHTML).join('') + backHTML() + '</main>';
 }
 expose({ PROBLEMS: PROBLEMS, problemHTML: problemHTML, formProblem: formProblem, stepDone: stepDone });
@@ -3382,7 +3825,9 @@ selfcheck.add('a finished problem shows every step, Done and its closing figure;
 
 selfcheck.add('setup rows accept any equivalent form of the one-variable function', function () {
   var cases = [['p1-2', '30y^2 - y^3'], ['p2-3', '2y + 450/y'], ['p3-1', '4h^3 - 52h^2 + 160h'], ['p4-3', '(12w^3 + 648)/w'], ['p5-2', '24x - 2x^3'],
-    ['p6-2', 'x^2 - 7x + 16'], ['p7-4', '12000 + 200x - 20x^2'], ['p8-1', 'x^2/16 + (24 - x)^2/16'], ['p5-3', '2sqrt(3)'], ['p6-8', '1.936']];
+    ['p6-2', 'x^2 - 7x + 16'], ['p7-4', '12000 + 200x - 20x^2'], ['p8-1', 'x^2/16 + (24 - x)^2/16'], ['p5-3', '2sqrt(3)'], ['p6-8', '1.936'],
+    /* More Practice */ ['m1-3', '(2x^2 + 4050)/x'], ['m2-3', '-0.45x^2 + 54x'], ['m3-3', 'x(300 - x^2)/4'], ['m4-3', 'pi(r^3 + 128)/r'], ['m5-3', '2x*2sqrt(25 - x^2)'],
+    ['m6-3', '5a^2/(2a - 4)'], ['m7-2', 'sqrt(x^2 - 72x + 1396)'], ['m8-1', '-50p^2 + 900p'], ['m9-2', 'x^2/16 + 3(56 - x)^2/64'], ['m4-9', '150.8'], ['m5-7', '3.54']];
   var bad = cases.filter(function (c) { return judge(ITEMS[c[0]], c[1]).st !== 'ok'; }).map(function (c) { return c[0] + ' "' + c[1] + '" -> ' + judge(ITEMS[c[0]], c[1]).st; });
   return bad.length ? { ok: false, detail: bad.join('; ') } : { ok: true, detail: cases.length + ' cases' };
 });
