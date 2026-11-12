@@ -2868,11 +2868,11 @@ function prod1(y) { return (30 - y) * y * y; }
 function fence2(y) { return 450 / y + 2 * y; }
 function vol3(h) { return h * (16 - 2 * h) * (10 - 2 * h); }
 function cost4(w) { return 12 * w * w + 648 / w; }
-function area5(x) { return 2 * x * (12 - x * x); }
+function area5(x) { return 2 * x * (27 - x * x); }
 function dist6(x) { return (x - 4) * (x - 4) + x; }
 function rev7(x) { return (20 + x) * (600 - 20 * x); }
 function wire8(x) { return Math.pow(x / 4, 2) + Math.pow((24 - x) / 4, 2); }
-var R12 = Math.sqrt(12);
+var R27 = Math.sqrt(27);
 /* More Practice closing-figure functions (Problems 9 to 17) */
 function fence9(x) { return 2 * x + 4050 / x; }
 function budget10(x) { return 54 * x - 9 * x * x / 20; }
@@ -3059,38 +3059,38 @@ var PROBLEMS = [
     after: '`C(w)` is concave up on `w > 0`, and its lowest point is `(3, 324)`.' },
 
   /* 5. a rectangle under a parabola: the curve is the constraint, Method 1 */
-  { id: 'p5', sec: 'sec-curve', task: 'A rectangle has its base on the x-axis and its two upper corners on the parabola `y = 12 − x^2`. Find the largest area it can have.', teach: T_MORE2,
-    fig: { x: [-4, 4], y: [-1.6, 13], ticks: { x: 2, y: 4 }, fns: [{ f: function (x) { return 12 - x * x; }, domain: [-R12, R12] }], texts: [{ x: -1.3, y: -0.9, text: '−x' }, { x: 1.3, y: -0.9, text: 'x' }],
-      segs: poly([[-1.3, 0], [-1.3, 10.31], [1.3, 10.31], [1.3, 0]], 'outside', false, 2.5), dots: [{ x: 1.3, y: 10.31, label: '(x, y)', at: 'ne' }],
-      aria: 'The parabola y = 12 minus x squared, opening downward from (0, 12). A rectangle stands on the x-axis from −x to x, symmetric about the y-axis, with its upper right corner at a point (x, y) on the parabola.' },
+  { id: 'p5', sec: 'sec-curve', task: 'A rectangle has its base on the x-axis and its two upper corners on the parabola `y = 27 − x^2`. Find the largest area it can have.', teach: T_MORE2,
+    fig: { x: [-6, 6], y: [-3.4, 29], ticks: { x: 3, y: 6 }, fns: [{ f: function (x) { return 27 - x * x; }, domain: [-R27, R27] }], texts: [{ x: -1.5, y: -1.9, text: '−x' }, { x: 1.5, y: -1.9, text: 'x' }],
+      segs: poly([[-1.5, 0], [-1.5, 24.75], [1.5, 24.75], [1.5, 0]], 'outside', false, 2.5), dots: [{ x: 1.5, y: 24.75, label: '(x, y)', at: 'ne' }],
+      aria: 'The parabola y = 27 minus x squared, opening downward from (0, 27). A rectangle stands on the x-axis from −x to x, symmetric about the y-axis, with its upper right corner at a point (x, y) on the parabola.' },
     steps: [
       { lead: 'The upper right corner is `(x, y)`. What do you maximize, and what is the constraint?', ok: 0, pick: [
-        ['Maximize `A = 2xy`; constraint `y = 12 − x^2`', 'The base runs from `−x` to `x`, so it has length `2x`, and the corner lies on the parabola.'],
-        ['Maximize `A = xy`; constraint `y = 12 − x^2`', 'The rectangle is symmetric about the y-axis, so the base runs from `−x` to `x` and has length `2x`.'],
-        ['Maximize `A = 2xy`; constraint `2x + 2y = 12`', 'The 12 belongs to the parabola. The condition every rectangle must satisfy is that its corner lies on `y = 12 − x^2`.']] },
-      { lead: 'Substitute the constraint.', ask: 'A(x) =', ans: '2x(12 - x^2)',
-        wrongs: [['x(12 - x^2)', 'The base has length `2x`, so `A = 2x · y`.']],
-        hints: ['Replace `y` in `2xy` with `12 − x^2`.'] },
-      { lead: 'The domain is `0 ≤ x ≤ b`. Find `b`, the largest `x` that still gives a rectangle.', ask: 'b =', num: true, tol: 0.002, ans: 'sqrt(12)',
-        wrongs: [['12', 'The height `12 − x^2` must not be negative, so `x^2 ≤ 12`. Take the square root.'], ['6', 'The height `12 − x^2` is 0 when `x^2 = 12`, so `x = sqrt(12)`, not half of 12.']],
-        hints: ['The corner must be on or above the x-axis: `12 − x^2 ≥ 0`.'] },
-      { lead: 'Multiply out `A(x) = 24x − 2x^3` and differentiate.', ask: 'A′(x) =', ans: '24 - 6x^2',
-        wrongs: [['24 - 2x^2', 'The derivative of `2x^3` is `6x^2`. Bring the power down as a factor.']],
-        hints: ['Use the power rule on `24x − 2x^3`.'] },
-      { lead: 'Solve `A′(x) = 0` in the domain.', ask: 'x =', num: true, ans: '2',
-        wrongs: [['4', '`6x^2 = 24` gives `x^2 = 4`. Take the square root.'], ['-2', '`−2` solves `x^2 = 4`, but the domain is `0 ≤ x ≤ sqrt(12)`.']],
-        hints: ['`24 − 6x^2 = 0` gives `x^2 = 4`.'] },
-      { lead: 'Which statement shows that `x = 2` gives the largest area?', ok: 0, pick: [
-        ['`A(0) = 0`, `A(sqrt(12)) = 0` and `A(2) = 32` (Method 1)', 'The domain is a closed interval and `A` is continuous on it, so the largest of these values is the absolute maximum.'],
-        ['`A′(2) = 0`', '`A′(2) = 0` makes 2 a critical point. It does not say whether `A(2)` is the largest value.', T_METH],
-        ['`A(2) = 32` is positive', 'A positive value is not a proof. Compare it with the values at the endpoints.', T_METH]] },
-      { ask: '"largest area" A(2) =', num: true, ans: '32',
-        wrongs: [['16', 'That is `x · y = 2 · 8`. The base is `2x = 4`, so the area is `4 · 8`.'], ['8', 'That is the height `y = 12 − 2^2`. Multiply it by the base `2x = 4`.']],
-        hints: ['Put `x = 2` into `2x(12 − x^2)`.'],
-        why: 'The rectangle is 4 wide and 8 tall.' }],
-    graph: { x: [0, 3.6], y: [0, 36], ticks: { x: 1, y: 8 }, fns: [{ f: area5, domain: [0, R12] }], dots: [{ x: 0, y: 0 }, { x: 2, y: 32, label: '(2, 32)', at: 'n' }, { x: R12, y: 0 }],
-      aria: 'The graph of A(x) = 2x(12 − x squared) for x from 0 to the square root of 12. It is 0 at both ends and highest at (2, 32).' },
-    after: 'The area is 0 at both ends of `[0, sqrt(12)]` and largest at `(2, 32)`.' },
+        ['Maximize `A = 2xy`; constraint `y = 27 − x^2`', 'The base runs from `−x` to `x`, so it has length `2x`, and the corner lies on the parabola.'],
+        ['Maximize `A = xy`; constraint `y = 27 − x^2`', 'The rectangle is symmetric about the y-axis, so the base runs from `−x` to `x` and has length `2x`.'],
+        ['Maximize `A = 2xy`; constraint `2x + 2y = 27`', 'The 27 belongs to the parabola. The condition every rectangle must satisfy is that its corner lies on `y = 27 − x^2`.']] },
+      { lead: 'Substitute the constraint.', ask: 'A(x) =', ans: '2x(27 - x^2)',
+        wrongs: [['x(27 - x^2)', 'The base has length `2x`, so `A = 2x · y`.']],
+        hints: ['Replace `y` in `2xy` with `27 − x^2`.'] },
+      { lead: 'The domain is `0 ≤ x ≤ b`. Find `b`, the largest `x` that still gives a rectangle.', ask: 'b =', num: true, tol: 0.002, ans: 'sqrt(27)',
+        wrongs: [['27', 'The height `27 − x^2` must not be negative, so `x^2 ≤ 27`. Take the square root.'], ['13.5', 'The height `27 − x^2` is 0 when `x^2 = 27`, so `x = sqrt(27)`, not half of 27.']],
+        hints: ['The corner must be on or above the x-axis: `27 − x^2 ≥ 0`.'] },
+      { lead: 'Multiply out `A(x) = 54x − 2x^3` and differentiate.', ask: 'A′(x) =', ans: '54 - 6x^2',
+        wrongs: [['54 - 2x^2', 'The derivative of `2x^3` is `6x^2`. Bring the power down as a factor.']],
+        hints: ['Use the power rule on `54x − 2x^3`.'] },
+      { lead: 'Solve `A′(x) = 0` in the domain.', ask: 'x =', num: true, ans: '3',
+        wrongs: [['9', '`6x^2 = 54` gives `x^2 = 9`. Take the square root.'], ['-3', '`−3` solves `x^2 = 9`, but the domain is `0 ≤ x ≤ sqrt(27)`.']],
+        hints: ['`54 − 6x^2 = 0` gives `x^2 = 9`.'] },
+      { lead: 'Which statement shows that `x = 3` gives the largest area?', ok: 0, pick: [
+        ['`A(0) = 0`, `A(sqrt(27)) = 0` and `A(3) = 108` (Method 1)', 'The domain is a closed interval and `A` is continuous on it, so the largest of these values is the absolute maximum.'],
+        ['`A′(3) = 0`', '`A′(3) = 0` makes 3 a critical point. It does not say whether `A(3)` is the largest value.', T_METH],
+        ['`A(3) = 108` is positive', 'A positive value is not a proof. Compare it with the values at the endpoints.', T_METH]] },
+      { ask: '"largest area" A(3) =', num: true, ans: '108',
+        wrongs: [['54', 'That is `x · y = 3 · 18`. The base is `2x = 6`, so the area is `6 · 18`.'], ['18', 'That is the height `y = 27 − 3^2`. Multiply it by the base `2x = 6`.']],
+        hints: ['Put `x = 3` into `2x(27 − x^2)`.'],
+        why: 'The rectangle is 6 wide and 18 tall.' }],
+    graph: { x: [0, 5.4], y: [0, 120], ticks: { x: 1, y: 20 }, fns: [{ f: area5, domain: [0, R27] }], dots: [{ x: 0, y: 0 }, { x: 3, y: 108, label: '(3, 108)', at: 'n' }, { x: R27, y: 0 }],
+      aria: 'The graph of A(x) = 2x(27 − x squared) for x from 0 to the square root of 27. It is 0 at both ends and highest at (3, 108).' },
+    after: 'The area is 0 at both ends of `[0, sqrt(27)]` and largest at `(3, 108)`.' },
 
   /* 6. the closest point on a curve: minimize the squared distance, Method 3 */
   { id: 'p6', sec: 'sec-curve', task: 'Find the point on the curve `y = sqrt(x)` that is closest to the point `(4, 0)`, and find that smallest distance.', teach: T_MORE3,
@@ -3824,8 +3824,8 @@ selfcheck.add('a finished problem shows every step, Done and its closing figure;
 });
 
 selfcheck.add('setup rows accept any equivalent form of the one-variable function', function () {
-  var cases = [['p1-2', '30y^2 - y^3'], ['p2-3', '2y + 450/y'], ['p3-1', '4h^3 - 52h^2 + 160h'], ['p4-3', '(12w^3 + 648)/w'], ['p5-2', '24x - 2x^3'],
-    ['p6-2', 'x^2 - 7x + 16'], ['p7-4', '12000 + 200x - 20x^2'], ['p8-1', 'x^2/16 + (24 - x)^2/16'], ['p5-3', '2sqrt(3)'], ['p6-8', '1.936'],
+  var cases = [['p1-2', '30y^2 - y^3'], ['p2-3', '2y + 450/y'], ['p3-1', '4h^3 - 52h^2 + 160h'], ['p4-3', '(12w^3 + 648)/w'], ['p5-2', '54x - 2x^3'],
+    ['p6-2', 'x^2 - 7x + 16'], ['p7-4', '12000 + 200x - 20x^2'], ['p8-1', 'x^2/16 + (24 - x)^2/16'], ['p5-3', '3sqrt(3)'], ['p6-8', '1.936'],
     /* More Practice */ ['m1-3', '(2x^2 + 4050)/x'], ['m2-3', '-0.45x^2 + 54x'], ['m3-3', 'x(300 - x^2)/4'], ['m4-3', 'pi(r^3 + 128)/r'], ['m5-3', '2x*2sqrt(25 - x^2)'],
     ['m6-3', '5a^2/(2a - 4)'], ['m7-2', 'sqrt(x^2 - 72x + 1396)'], ['m8-1', '-50p^2 + 900p'], ['m9-2', 'x^2/16 + 3(56 - x)^2/64'], ['m4-9', '150.8'], ['m5-7', '3.54']];
   var bad = cases.filter(function (c) { return judge(ITEMS[c[0]], c[1]).st !== 'ok'; }).map(function (c) { return c[0] + ' "' + c[1] + '" -> ' + judge(ITEMS[c[0]], c[1]).st; });
